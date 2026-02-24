@@ -90,10 +90,17 @@ export async function analyzeFoodPhoto(
   const text = data.content?.find((b) => b.type === 'text')?.text?.trim();
   if (!text) throw new Error('No response from Claude');
 
-  // Extract JSON array (handle optional markdown code block)
-  let jsonStr = text;
+  // Extract JSON array: try code block first, then first '[' to last ']' (handles text before/after)
+  let jsonStr: string;
   const codeMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/);
-  if (codeMatch) jsonStr = codeMatch[1].trim();
+  if (codeMatch) {
+    jsonStr = codeMatch[1].trim();
+  } else {
+    const start = text.indexOf('[');
+    const lastBracket = text.lastIndexOf(']');
+    if (start === -1 || lastBracket === -1 || lastBracket <= start) throw new Error('No JSON array found in response');
+    jsonStr = text.slice(start, lastBracket + 1);
+  }
   const raw = JSON.parse(jsonStr) as unknown;
   if (!Array.isArray(raw)) throw new Error('Response was not a JSON array');
 
