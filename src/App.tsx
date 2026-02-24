@@ -197,8 +197,13 @@ function App() {
         >
           <section
             ref={(el) => { sectionsRef.current[0] = el; }}
-            className="shrink-0 overflow-y-auto overflow-x-hidden"
-            style={{ width: `${100 / TABS.length}%`, height: '100vh', maxHeight: '100vh' }}
+            className="shrink-0 overflow-y-auto overflow-x-hidden overscroll-y-auto"
+            style={{
+              width: `${100 / TABS.length}%`,
+              height: 'calc(100vh - 96px)',
+              maxHeight: 'calc(100vh - 96px)',
+              WebkitOverflowScrolling: 'touch',
+            }}
             aria-label="Dashboard"
           >
             <Dashboard
@@ -209,8 +214,13 @@ function App() {
           </section>
           <section
             ref={(el) => { sectionsRef.current[1] = el; }}
-            className="shrink-0 overflow-y-auto overflow-x-hidden"
-            style={{ width: `${100 / TABS.length}%`, height: '100vh', maxHeight: '100vh' }}
+            className="shrink-0 overflow-y-auto overflow-x-hidden overscroll-y-auto"
+            style={{
+              width: `${100 / TABS.length}%`,
+              height: 'calc(100vh - 96px)',
+              maxHeight: 'calc(100vh - 96px)',
+              WebkitOverflowScrolling: 'touch',
+            }}
             aria-label="Add food"
           >
             <div className="max-w-lg mx-auto px-4 py-8">
@@ -237,16 +247,26 @@ function App() {
           </section>
           <section
             ref={(el) => { sectionsRef.current[2] = el; }}
-            className="shrink-0 overflow-y-auto overflow-x-hidden"
-            style={{ width: `${100 / TABS.length}%`, height: '100vh', maxHeight: '100vh' }}
+            className="shrink-0 overflow-y-auto overflow-x-hidden overscroll-y-auto"
+            style={{
+              width: `${100 / TABS.length}%`,
+              height: 'calc(100vh - 96px)',
+              maxHeight: 'calc(100vh - 96px)',
+              WebkitOverflowScrolling: 'touch',
+            }}
             aria-label="History"
           >
             <WeeklySummary />
           </section>
           <section
             ref={(el) => { sectionsRef.current[3] = el; }}
-            className="shrink-0 overflow-y-auto overflow-x-hidden"
-            style={{ width: `${100 / TABS.length}%`, height: '100vh', maxHeight: '100vh' }}
+            className="shrink-0 overflow-y-auto overflow-x-hidden overscroll-y-auto"
+            style={{
+              width: `${100 / TABS.length}%`,
+              height: 'calc(100vh - 96px)',
+              maxHeight: 'calc(100vh - 96px)',
+              WebkitOverflowScrolling: 'touch',
+            }}
             aria-label="Settings"
           >
             <SettingsScreen />
