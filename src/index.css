@@ -58,7 +58,7 @@ button, a, [role="button"], .tap-target {
 
 #root {
   min-height: 100vh;
-  padding-bottom: 120px;
+  padding-bottom: 80px;
 }
 
 /* Bouncy tap animation */
