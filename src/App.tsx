@@ -21,6 +21,7 @@ function App() {
   const [isDragging, setIsDragging] = useState(false);
   const touchStart = useRef({ x: 0, y: 0 });
   const swipeLock = useRef(false);
+  const gestureActive = useRef(false);
   const mainRef = useRef<HTMLElement>(null);
 
   const [addFoodOpen, setAddFoodOpen] = useState(false);
@@ -101,12 +102,22 @@ function App() {
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
+    const target = e.target as HTMLElement | null;
+    if (target && target.closest('button, a, [role="button"], input, textarea, select')) {
+      // Don't start swipe gestures when interacting with controls
+      gestureActive.current = false;
+      swipeLock.current = false;
+      setIsDragging(false);
+      return;
+    }
     touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
     swipeLock.current = false;
+    gestureActive.current = true;
     setIsDragging(true);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
+    if (!gestureActive.current) return;
     const x = e.touches[0].clientX;
     const y = e.touches[0].clientY;
     const deltaX = x - touchStart.current.x;
@@ -125,7 +136,7 @@ function App() {
   };
 
   const handleTouchEnd = () => {
-    if (swipeLock.current) {
+    if (gestureActive.current && swipeLock.current) {
       if (dragPx > SWIPE_THRESHOLD_PX && tabIndex > 0) {
         setTabIndex((i) => i - 1);
       } else if (dragPx < -SWIPE_THRESHOLD_PX && tabIndex < TABS.length - 1) {
@@ -133,6 +144,7 @@ function App() {
       }
     }
     setDragPx(0);
+    gestureActive.current = false;
     swipeLock.current = false;
     setIsDragging(false);
   };
@@ -215,11 +227,11 @@ function App() {
       )}
 
       <nav
-        className="fixed bottom-0 left-0 right-0 bg-[var(--color-card)] shadow-[0_-4px 20px rgba(45,49,66,0.08)] z-40 min-h-[88px] flex flex-col justify-end"
+        className="fixed bottom-0 left-0 right-0 bg-[var(--color-card)] shadow-[0_-4px 20px rgba(45,49,66,0.08)] z-40 min-h-[96px] flex flex-col justify-end"
         style={{ paddingBottom: 'env(safe-area-inset-bottom, 0)' }}
         role="navigation"
       >
-        <div className="max-w-lg mx-auto flex items-center justify-around w-full min-h-[88px] py-2">
+        <div className="max-w-lg mx-auto flex items-center justify-around w-full min-h-[96px] py-2">
           {(['dashboard', 'add', 'history', 'settings'] as const).map((t, i) => (
             <button
               key={t}
