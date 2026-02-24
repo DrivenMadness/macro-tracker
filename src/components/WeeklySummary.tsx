@@ -50,10 +50,13 @@ export function WeeklySummary() {
 
   const totalMacroCal =
     totalProtein * 4 + totalCarbs * 4 + totalFat * 9 || 1;
+  const proteinPct = (totalProtein * 4 / totalMacroCal) * 100;
+  const carbsPct = (totalCarbs * 4 / totalMacroCal) * 100;
+  const fatPct = (totalFat * 9 / totalMacroCal) * 100;
   const pieData = [
-    { name: 'Protein', value: Math.round((totalProtein * 4 / totalMacroCal) * 100), color: CHART_COLORS.proteinPie },
-    { name: 'Carbs', value: Math.round((totalCarbs * 4 / totalMacroCal) * 100), color: CHART_COLORS.carbsPie },
-    { name: 'Fat', value: Math.round((totalFat * 9 / totalMacroCal) * 100), color: CHART_COLORS.fatPie },
+    { name: 'Protein', value: proteinPct, color: CHART_COLORS.proteinPie },
+    { name: 'Carbs', value: carbsPct, color: CHART_COLORS.carbsPie },
+    { name: 'Fat', value: fatPct, color: CHART_COLORS.fatPie },
   ].filter((d) => d.value > 0);
 
   return (
@@ -217,7 +220,7 @@ export function WeeklySummary() {
                   paddingAngle={2}
                   dataKey="value"
                   nameKey="name"
-                  label={({ name, value }) => `${name} ${value}%`}
+                  label={({ name, value }) => `${name} ${Math.round(value)}%`}
                   labelLine={{ stroke: AXIS_STROKE }}
                 >
                   {pieData.map((entry) => (
