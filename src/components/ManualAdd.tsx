@@ -35,7 +35,7 @@ export function ManualAdd({ onBack, onSubmit }: ManualAddProps) {
       <button
         type="button"
         onClick={onBack}
-        className="flex items-center gap-2 text-[var(--color-text-muted)] py-2 -ml-1 min-h-[44px]"
+        className="flex items-center gap-2 text-[var(--color-text-muted)] py-2 -ml-1 min-h-[44px] tap-bounce"
       >
         <ArrowLeft className="w-5 h-5" />
         Back
@@ -43,13 +43,13 @@ export function ManualAdd({ onBack, onSubmit }: ManualAddProps) {
 
       <form onSubmit={handleSubmit} className="space-y-4 mt-2">
         <label className="block">
-          <span className="text-sm text-[var(--color-text-muted)]">Food name</span>
+          <span className="text-sm font-medium text-[var(--color-text-muted)]">Food name</span>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g. Grilled chicken breast"
-            className="block w-full rounded-xl bg-[var(--color-card)] border border-white/10 px-4 py-3 text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] mt-1 min-h-[44px]"
+            className="block w-full rounded-2xl bg-[var(--color-card)] shadow-[var(--shadow-card)] px-4 py-3 text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] mt-1 min-h-[48px] border-0"
             autoFocus
           />
         </label>
@@ -62,7 +62,7 @@ export function ManualAdd({ onBack, onSubmit }: ManualAddProps) {
             { value: fat, set: setFat, label: 'Fat (g)', placeholder: '0' },
           ].map(({ value, set, label, placeholder }) => (
             <label key={label} className="block">
-              <span className="text-sm text-[var(--color-text-muted)]">{label}</span>
+              <span className="text-sm font-medium text-[var(--color-text-muted)]">{label}</span>
               <input
                 type="number"
                 min={0}
@@ -70,18 +70,18 @@ export function ManualAdd({ onBack, onSubmit }: ManualAddProps) {
                 value={value}
                 onChange={(e) => set(e.target.value)}
                 placeholder={placeholder}
-                className="block w-full rounded-xl bg-[var(--color-card)] border border-white/10 px-4 py-3 text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] mt-1 min-h-[44px]"
+                className="block w-full rounded-2xl bg-[var(--color-card)] shadow-[var(--shadow-card)] px-4 py-3 text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] mt-1 min-h-[48px] border-0"
               />
             </label>
           ))}
         </div>
 
-        <label className="flex items-center gap-2 min-h-[44px] cursor-pointer">
+        <label className="flex items-center gap-2 min-h-[48px] cursor-pointer">
           <input
             type="checkbox"
             checked={saveToDb}
             onChange={(e) => setSaveToDb(e.target.checked)}
-            className="rounded border-white/20"
+            className="rounded border-2 border-[var(--color-text-muted)]"
           />
           <span className="text-sm text-[var(--color-text-muted)]">
             Save to food database for future search
@@ -90,7 +90,7 @@ export function ManualAdd({ onBack, onSubmit }: ManualAddProps) {
 
         <button
           type="submit"
-          className="w-full flex items-center justify-center gap-2 rounded-xl bg-[var(--color-accent)] text-[var(--color-bg)] font-medium px-4 py-3 min-h-[44px]"
+          className="w-full flex items-center justify-center gap-2 rounded-full bg-[var(--color-accent)] text-white font-semibold px-4 py-3 min-h-[48px] shadow-[var(--shadow-soft)] tap-bounce"
         >
           <Check className="w-5 h-5" />
           Add to today&apos;s log

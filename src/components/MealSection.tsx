@@ -5,6 +5,7 @@ import type { FoodItem } from '../lib/types';
 
 interface MealSectionProps {
   title: string;
+  emoji?: string;
   entries: MealEntry[];
   foodById: (id: string | null) => FoodItem | undefined;
   onAdd: () => void;
@@ -24,6 +25,7 @@ interface MealSectionProps {
 
 export function MealSection({
   title,
+  emoji,
   entries,
   foodById,
   onAdd,
@@ -44,11 +46,11 @@ export function MealSection({
   );
 
   return (
-    <section className="rounded-xl bg-[var(--color-card)] overflow-hidden">
+    <section className="rounded-3xl bg-[var(--color-card)] overflow-hidden shadow-[var(--shadow-card)] tap-bounce">
       <button
         type="button"
         onClick={() => setExpanded((e) => !e)}
-        className="w-full flex items-center justify-between gap-2 px-4 py-3 min-h-[44px] text-left"
+        className="w-full flex items-center justify-between gap-2 px-5 py-3.5 min-h-[48px] text-left"
         aria-expanded={expanded}
       >
         <span className="flex items-center gap-2">
@@ -57,29 +59,30 @@ export function MealSection({
           ) : (
             <ChevronRight className="w-5 h-5 text-[var(--color-text-muted)]" />
           )}
-          <span className="font-medium text-[var(--color-text)]">{title}</span>
+          {emoji && <span className="text-xl" role="img" aria-hidden>{emoji}</span>}
+          <span className="font-semibold text-[var(--color-text)]">{title}</span>
         </span>
-        <span className="text-sm text-[var(--color-text-muted)]">
+        <span className="text-sm font-medium text-[var(--color-text-muted)]">
           {entries.length} item{entries.length !== 1 ? 's' : ''}
         </span>
       </button>
 
       {expanded && (
-        <div className="border-t border-white/10">
+        <div className="border-t border-[var(--color-card-soft)]">
           {entries.length === 0 ? (
-            <div className="px-4 py-6 flex flex-col items-center gap-2">
+            <div className="px-5 py-6 flex flex-col items-center gap-3">
               <p className="text-sm text-[var(--color-text-muted)]">No items yet</p>
               <button
                 type="button"
                 onClick={onAdd}
-                className="flex items-center justify-center gap-2 rounded-lg bg-[var(--color-accent)] text-[var(--color-bg)] font-medium px-4 py-3 min-h-[44px]"
+                className="flex items-center justify-center gap-2 rounded-full bg-[var(--color-accent)] text-white font-semibold px-5 py-3 min-h-[48px] shadow-[var(--shadow-soft)] tap-bounce animate-pop-in"
               >
                 <Plus className="w-5 h-5" />
                 Add food
               </button>
             </div>
           ) : (
-            <ul className="divide-y divide-white/10">
+            <ul className="divide-y divide-[var(--color-card-soft)]">
               {entries.map((entry) => {
                 const food = entry.food_item_id ? foodById(entry.food_item_id) : null;
                 const displayName = entry.custom_name ?? food?.name ?? 'Unknown';
@@ -104,11 +107,11 @@ export function MealSection({
                         onCancel={() => setEditingId(null)}
                       />
                     ) : (
-                      <div className="group flex items-center gap-2 px-4 py-3">
+                      <div className="group flex items-center gap-2 px-5 py-3">
                         <button
                           type="button"
                           onClick={() => setEditingId(entry.id)}
-                          className="min-w-0 flex-1 flex items-center justify-between gap-2 text-left min-h-[44px] rounded-lg hover:bg-white/5"
+                          className="min-w-0 flex-1 flex items-center justify-between gap-2 text-left min-h-[48px] rounded-2xl hover:bg-[var(--color-card-soft)] transition-colors tap-bounce"
                         >
                           <div className="min-w-0 flex-1">
                             <p className="text-[var(--color-text)] truncate">
@@ -131,7 +134,7 @@ export function MealSection({
                             e.stopPropagation();
                             onRemove(entry.id);
                           }}
-                          className="p-2 rounded-lg text-[var(--color-text-muted)] hover:text-[var(--color-danger)] hover:bg-white/5 min-h-[44px] min-w-[44px] flex items-center justify-center"
+                          className="p-2 rounded-2xl text-[var(--color-text-muted)] hover:text-[var(--color-danger)] hover:bg-[var(--color-card-soft)] min-h-[48px] min-w-[48px] flex items-center justify-center transition-colors tap-bounce"
                           aria-label="Remove"
                         >
                           <Trash2 className="w-5 h-5" />
@@ -145,14 +148,14 @@ export function MealSection({
           )}
 
           {expanded && entries.length > 0 && (
-            <div className="px-4 py-3 flex items-center justify-between border-t border-white/10 bg-black/20">
-              <span className="text-sm text-[var(--color-text-muted)]">
+            <div className="px-5 py-3 flex items-center justify-between border-t border-[var(--color-card-soft)] bg-[var(--color-card-soft)]">
+              <span className="text-sm font-medium text-[var(--color-text-muted)]">
                 Subtotal: {subtotal.calories} cal, {subtotal.protein}g protein
               </span>
               <button
                 type="button"
                 onClick={onAdd}
-                className="flex items-center justify-center gap-1 rounded-lg border border-[var(--color-accent)] text-[var(--color-accent)] font-medium px-3 py-2 min-h-[44px]"
+                className="flex items-center justify-center gap-1 rounded-full border-2 border-[var(--color-accent)] text-[var(--color-accent)] font-semibold px-4 py-2 min-h-[44px] tap-bounce"
               >
                 <Plus className="w-4 h-4" />
                 Add
@@ -207,16 +210,16 @@ function EntryEditForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="px-4 py-3 space-y-3 bg-white/5 border-y border-white/10">
+    <form onSubmit={handleSubmit} className="px-5 py-3 space-y-3 bg-[var(--color-card-soft)] border-y border-[var(--color-card-soft)] rounded-b-2xl">
       <input
         type="text"
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="Food name"
-        className="w-full rounded-lg bg-[var(--color-card)] border border-white/10 px-3 py-2 text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] min-h-[44px]"
+        className="w-full rounded-2xl bg-[var(--color-card)] shadow-[var(--shadow-card)] border-0 px-4 py-2.5 text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] min-h-[48px]"
       />
       <div className="grid grid-cols-2 gap-2">
-        <label className="text-xs text-[var(--color-text-muted)]">
+        <label className="text-xs font-medium text-[var(--color-text-muted)]">
           Cal
           <input
             type="number"
@@ -224,10 +227,10 @@ function EntryEditForm({
             step={1}
             value={calories}
             onChange={(e) => setCalories(e.target.value)}
-            className="block w-full rounded-lg bg-[var(--color-card)] border border-white/10 px-3 py-2 text-[var(--color-text)] min-h-[44px] mt-0.5"
+            className="block w-full rounded-2xl bg-[var(--color-card)] shadow-[var(--shadow-card)] border-0 px-3 py-2 text-[var(--color-text)] min-h-[44px] mt-0.5"
           />
         </label>
-        <label className="text-xs text-[var(--color-text-muted)]">
+        <label className="text-xs font-medium text-[var(--color-text-muted)]">
           Protein (g)
           <input
             type="number"
@@ -235,10 +238,10 @@ function EntryEditForm({
             step={0.5}
             value={protein}
             onChange={(e) => setProtein(e.target.value)}
-            className="block w-full rounded-lg bg-[var(--color-card)] border border-white/10 px-3 py-2 text-[var(--color-text)] min-h-[44px] mt-0.5"
+            className="block w-full rounded-2xl bg-[var(--color-card)] shadow-[var(--shadow-card)] border-0 px-3 py-2 text-[var(--color-text)] min-h-[44px] mt-0.5"
           />
         </label>
-        <label className="text-xs text-[var(--color-text-muted)]">
+        <label className="text-xs font-medium text-[var(--color-text-muted)]">
           Carbs (g)
           <input
             type="number"
@@ -246,10 +249,10 @@ function EntryEditForm({
             step={0.5}
             value={carbs}
             onChange={(e) => setCarbs(e.target.value)}
-            className="block w-full rounded-lg bg-[var(--color-card)] border border-white/10 px-3 py-2 text-[var(--color-text)] min-h-[44px] mt-0.5"
+            className="block w-full rounded-2xl bg-[var(--color-card)] shadow-[var(--shadow-card)] border-0 px-3 py-2 text-[var(--color-text)] min-h-[44px] mt-0.5"
           />
         </label>
-        <label className="text-xs text-[var(--color-text-muted)]">
+        <label className="text-xs font-medium text-[var(--color-text-muted)]">
           Fat (g)
           <input
             type="number"
@@ -257,10 +260,10 @@ function EntryEditForm({
             step={0.5}
             value={fat}
             onChange={(e) => setFat(e.target.value)}
-            className="block w-full rounded-lg bg-[var(--color-card)] border border-white/10 px-3 py-2 text-[var(--color-text)] min-h-[44px] mt-0.5"
+            className="block w-full rounded-2xl bg-[var(--color-card)] shadow-[var(--shadow-card)] border-0 px-3 py-2 text-[var(--color-text)] min-h-[44px] mt-0.5"
           />
         </label>
-        <label className="text-xs text-[var(--color-text-muted)] col-span-2">
+        <label className="text-xs font-medium text-[var(--color-text-muted)] col-span-2">
           Quantity
           <input
             type="number"
@@ -268,14 +271,14 @@ function EntryEditForm({
             step={0.25}
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
-            className="block w-full rounded-lg bg-[var(--color-card)] border border-white/10 px-3 py-2 text-[var(--color-text)] min-h-[44px] mt-0.5"
+            className="block w-full rounded-2xl bg-[var(--color-card)] shadow-[var(--shadow-card)] border-0 px-3 py-2 text-[var(--color-text)] min-h-[44px] mt-0.5"
           />
         </label>
       </div>
       <div className="flex gap-2">
         <button
           type="submit"
-          className="flex-1 flex items-center justify-center gap-1 rounded-lg bg-[var(--color-accent)] text-[var(--color-bg)] font-medium py-2 min-h-[44px]"
+          className="flex-1 flex items-center justify-center gap-1 rounded-full bg-[var(--color-accent)] text-white font-semibold py-2.5 min-h-[48px] shadow-[var(--shadow-soft)] tap-bounce"
         >
           <Check className="w-4 h-4" />
           Save
@@ -283,7 +286,7 @@ function EntryEditForm({
         <button
           type="button"
           onClick={onCancel}
-          className="p-2 rounded-lg text-[var(--color-text-muted)] hover:bg-white/10 min-h-[44px] min-w-[44px] flex items-center justify-center"
+          className="p-2 rounded-full text-[var(--color-text-muted)] hover:bg-[var(--color-card)] min-h-[48px] min-w-[48px] flex items-center justify-center tap-bounce"
           aria-label="Cancel"
         >
           <X className="w-5 h-5" />
@@ -291,7 +294,7 @@ function EntryEditForm({
         <button
           type="button"
           onClick={onDelete}
-          className="flex items-center justify-center gap-1 rounded-lg border border-[var(--color-danger)] text-[var(--color-danger)] font-medium px-3 py-2 min-h-[44px]"
+          className="flex items-center justify-center gap-1 rounded-full border-2 border-[var(--color-danger)] text-[var(--color-danger)] font-semibold px-3 py-2 min-h-[48px] tap-bounce"
         >
           <Trash2 className="w-4 h-4" />
           Delete

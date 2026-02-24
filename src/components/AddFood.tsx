@@ -41,14 +41,14 @@ export function AddFood({ onAdd, onPhotoScanConfirm, onManualAdd, onClose, foods
 
   return (
     <div className="fixed inset-0 z-50 bg-[var(--color-bg)] flex flex-col">
-      <header className="flex items-center justify-between px-4 py-3 border-b border-white/10 shrink-0">
-        <h2 className="text-lg font-semibold text-[var(--color-text)]">
+      <header className="flex items-center justify-between px-4 py-3 border-b border-[var(--color-card-soft)] shrink-0 bg-[var(--color-card)] shadow-[var(--shadow-card)]">
+        <h2 className="text-lg font-bold text-[var(--color-text)]">
           Add food
         </h2>
         <button
           type="button"
           onClick={onClose}
-          className="p-2 rounded-lg text-[var(--color-text-muted)] hover:bg-white/10 min-h-[44px] min-w-[44px] flex items-center justify-center"
+          className="p-2 rounded-full text-[var(--color-text-muted)] hover:bg-[var(--color-card-soft)] min-h-[44px] min-w-[44px] flex items-center justify-center tap-bounce"
           aria-label="Close"
         >
           <X className="w-6 h-6" />
@@ -62,7 +62,7 @@ export function AddFood({ onAdd, onPhotoScanConfirm, onManualAdd, onClose, foods
               <button
                 type="button"
                 onClick={() => setView('photo')}
-                className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-[var(--color-card)] border border-white/10 text-[var(--color-text)] px-4 py-3 min-h-[44px]"
+                className="flex-1 flex items-center justify-center gap-2 rounded-full bg-[var(--color-card)] shadow-[var(--shadow-card)] text-[var(--color-text)] px-4 py-3 min-h-[48px] tap-bounce"
               >
                 <Camera className="w-5 h-5" />
                 Scan photo
@@ -70,7 +70,7 @@ export function AddFood({ onAdd, onPhotoScanConfirm, onManualAdd, onClose, foods
               <button
                 type="button"
                 onClick={() => setView('manual')}
-                className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-[var(--color-card)] border border-white/10 text-[var(--color-text)] px-4 py-3 min-h-[44px]"
+                className="flex-1 flex items-center justify-center gap-2 rounded-full bg-[var(--color-card)] shadow-[var(--shadow-card)] text-[var(--color-text)] px-4 py-3 min-h-[48px] tap-bounce"
               >
                 <Edit3 className="w-5 h-5" />
                 Manual Add

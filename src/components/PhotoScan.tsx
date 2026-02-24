@@ -79,17 +79,17 @@ export function PhotoScan({ onBack, onConfirm }: PhotoScanProps) {
         <button
           type="button"
           onClick={onBack}
-          className="flex items-center gap-2 text-[var(--color-text-muted)] py-2 -ml-1 min-h-[44px]"
+          className="flex items-center gap-2 text-[var(--color-text-muted)] py-2 -ml-1 min-h-[44px] tap-bounce"
         >
           <ArrowLeft className="w-5 h-5" />
           Back
         </button>
         <div className="flex-1 flex flex-col justify-center py-6">
-          <p className="text-[var(--color-danger)] mb-4">{error}</p>
+          <p className="text-[var(--color-danger)] font-medium mb-4">{error}</p>
           <button
             type="button"
             onClick={() => { setStep('capture'); setError(''); }}
-            className="rounded-xl bg-[var(--color-card)] text-[var(--color-text)] px-4 py-3 min-h-[44px]"
+            className="rounded-full bg-[var(--color-card)] shadow-[var(--shadow-card)] text-[var(--color-text)] px-4 py-3 min-h-[44px] tap-bounce"
           >
             Try again
           </button>
@@ -120,7 +120,7 @@ export function PhotoScan({ onBack, onConfirm }: PhotoScanProps) {
         <button
           type="button"
           onClick={onBack}
-          className="flex items-center gap-2 text-[var(--color-text-muted)] py-2 -ml-1 min-h-[44px]"
+          className="flex items-center gap-2 text-[var(--color-text-muted)] py-2 -ml-1 min-h-[44px] tap-bounce"
         >
           <ArrowLeft className="w-5 h-5" />
           Back
@@ -132,14 +132,14 @@ export function PhotoScan({ onBack, onConfirm }: PhotoScanProps) {
           {estimated.map((item, index) => (
             <li
               key={index}
-              className="rounded-xl bg-[var(--color-card)] p-4 space-y-3"
+              className="rounded-2xl bg-[var(--color-card)] shadow-[var(--shadow-card)] p-4 space-y-3"
             >
               <div className="flex items-center justify-between gap-2">
                 <input
                   type="text"
                   value={item.name}
                   onChange={(e) => updateItem(index, 'name', e.target.value)}
-                  className="flex-1 rounded-lg bg-[var(--color-bg)] border border-white/10 px-3 py-2 text-[var(--color-text)] min-h-[44px]"
+                  className="flex-1 rounded-2xl bg-[var(--color-bg)] px-3 py-2 text-[var(--color-text)] min-h-[44px] border-0 shadow-[var(--shadow-card)]"
                   placeholder="Food name"
                 />
                 {estimated.length > 1 && (
@@ -162,7 +162,7 @@ export function PhotoScan({ onBack, onConfirm }: PhotoScanProps) {
                       step={field === 'calories' ? 1 : 0.5}
                       value={item[field]}
                       onChange={(e) => updateItem(index, field, e.target.value === '' ? 0 : Number(e.target.value))}
-                      className="block w-full rounded-lg bg-[var(--color-bg)] border border-white/10 px-3 py-2 text-[var(--color-text)] mt-0.5 min-h-[44px]"
+                      className="block w-full rounded-2xl bg-[var(--color-bg)] px-3 py-2 text-[var(--color-text)] mt-0.5 min-h-[44px] border-0 shadow-[var(--shadow-card)]"
                     />
                   </label>
                 ))}
@@ -175,7 +175,7 @@ export function PhotoScan({ onBack, onConfirm }: PhotoScanProps) {
             type="checkbox"
             checked={saveToDb}
             onChange={(e) => setSaveToDb(e.target.checked)}
-            className="rounded border-white/20"
+            className="rounded border-2 border-[var(--color-text-muted)]"
           />
           <span className="text-sm text-[var(--color-text-muted)]">
             Save to food database for future search
@@ -184,7 +184,7 @@ export function PhotoScan({ onBack, onConfirm }: PhotoScanProps) {
         <button
           type="button"
           onClick={handleConfirm}
-          className="flex items-center justify-center gap-2 rounded-xl bg-[var(--color-accent)] text-[var(--color-bg)] font-medium px-4 py-3 min-h-[44px]"
+          className="flex items-center justify-center gap-2 rounded-full bg-[var(--color-accent)] text-white font-semibold px-4 py-3 min-h-[48px] shadow-[var(--shadow-soft)] tap-bounce"
         >
           <Check className="w-5 h-5" />
           Add to today&apos;s log
@@ -198,7 +198,7 @@ export function PhotoScan({ onBack, onConfirm }: PhotoScanProps) {
       <button
         type="button"
         onClick={onBack}
-        className="flex items-center gap-2 text-[var(--color-text-muted)] py-2 -ml-1 min-h-[44px]"
+        className="flex items-center gap-2 text-[var(--color-text-muted)] py-2 -ml-1 min-h-[44px] tap-bounce"
       >
         <ArrowLeft className="w-5 h-5" />
         Back
@@ -208,7 +208,7 @@ export function PhotoScan({ onBack, onConfirm }: PhotoScanProps) {
           Add your Claude API key in Settings to use photo scan.
         </p>
       )}
-      <label className="text-sm text-[var(--color-text-muted)] mb-1">
+      <label className="text-sm font-medium text-[var(--color-text-muted)] mb-1">
         Optional description (helps accuracy)
       </label>
       <textarea
@@ -216,7 +216,7 @@ export function PhotoScan({ onBack, onConfirm }: PhotoScanProps) {
         onChange={(e) => setDescription(e.target.value)}
         placeholder="e.g. homemade chicken stir fry with rice, about 2 cups"
         rows={2}
-        className="rounded-xl bg-[var(--color-card)] border border-white/10 px-4 py-3 text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] mb-4 resize-none min-h-[44px]"
+        className="rounded-2xl bg-[var(--color-card)] shadow-[var(--shadow-card)] px-4 py-3 text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] mb-4 resize-none min-h-[44px] border-0"
       />
       <input
         ref={cameraInputRef}
@@ -238,7 +238,7 @@ export function PhotoScan({ onBack, onConfirm }: PhotoScanProps) {
           type="button"
           onClick={() => cameraInputRef.current?.click()}
           disabled={!canScan}
-          className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-[var(--color-card)] border border-white/10 text-[var(--color-text)] px-4 py-4 min-h-[44px] disabled:opacity-50"
+          className="flex-1 flex items-center justify-center gap-2 rounded-full bg-[var(--color-card)] shadow-[var(--shadow-card)] text-[var(--color-text)] px-4 py-4 min-h-[48px] disabled:opacity-50 tap-bounce"
         >
           <Camera className="w-6 h-6" />
           Take photo
@@ -247,7 +247,7 @@ export function PhotoScan({ onBack, onConfirm }: PhotoScanProps) {
           type="button"
           onClick={() => libraryInputRef.current?.click()}
           disabled={!canScan}
-          className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-[var(--color-card)] border border-white/10 text-[var(--color-text)] px-4 py-4 min-h-[44px] disabled:opacity-50"
+          className="flex-1 flex items-center justify-center gap-2 rounded-full bg-[var(--color-card)] shadow-[var(--shadow-card)] text-[var(--color-text)] px-4 py-4 min-h-[48px] disabled:opacity-50 tap-bounce"
         >
           <ImagePlus className="w-6 h-6" />
           Choose photo

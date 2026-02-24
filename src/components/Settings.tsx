@@ -37,13 +37,13 @@ export function Settings() {
 
   return (
     <div className="max-w-lg mx-auto px-4 py-8 pb-24">
-      <h1 className="text-xl font-semibold text-[var(--color-text)] mb-6">
+      <h1 className="text-xl font-bold text-[var(--color-text)] mb-6">
         Settings
       </h1>
 
       {/* Macro targets */}
       <section className="mb-8">
-        <h2 className="text-sm font-medium text-[var(--color-text-muted)] mb-3">
+        <h2 className="text-sm font-semibold text-[var(--color-text-muted)] mb-3">
           Macro targets
         </h2>
         <p className="text-xs text-[var(--color-text-muted)] mb-4">
@@ -53,15 +53,15 @@ export function Settings() {
           {(['rest', 'lift'] as DayType[]).map((dayType) => (
             <div
               key={dayType}
-              className="rounded-xl bg-[var(--color-card)] p-4 border border-white/10"
+              className="rounded-3xl bg-[var(--color-card)] p-4 shadow-[var(--shadow-card)]"
             >
-              <h3 className="text-sm font-medium text-[var(--color-text)] mb-3">
+              <h3 className="text-sm font-semibold text-[var(--color-text)] mb-3">
                 {DAY_LABELS[dayType]}
               </h3>
               <div className="grid grid-cols-2 gap-3">
                 {FIELDS.map(({ key, label, unit }) => (
                   <label key={key} className="block">
-                    <span className="text-xs text-[var(--color-text-muted)]">
+                    <span className="text-xs font-medium text-[var(--color-text-muted)]">
                       {label}
                     </span>
                     <input
@@ -72,7 +72,7 @@ export function Settings() {
                       onChange={(e) =>
                         updateDayTypeTarget(dayType, key, Number(e.target.value) || 0)
                       }
-                      className="block w-full rounded-lg bg-[var(--color-bg)] border border-white/10 px-3 py-2.5 text-[var(--color-text)] mt-1 min-h-[44px]"
+                      className="block w-full rounded-2xl bg-[var(--color-bg)] px-3 py-2.5 text-[var(--color-text)] mt-1 min-h-[44px] border-0 shadow-[var(--shadow-card)]"
                     />
                     <span className="text-xs text-[var(--color-text-muted)] ml-1">
                       {unit}
@@ -99,13 +99,13 @@ export function Settings() {
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
               placeholder="sk-ant-..."
-              className="flex-1 rounded-xl bg-[var(--color-card)] border border-white/10 px-4 py-3 text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] min-h-[44px]"
+              className="flex-1 rounded-2xl bg-[var(--color-card)] shadow-[var(--shadow-card)] px-4 py-3 text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] min-h-[44px] border-0"
               autoComplete="off"
             />
             <button
               type="button"
               onClick={handleSaveKey}
-              className="rounded-xl bg-[var(--color-accent)] text-[var(--color-bg)] font-medium px-4 py-3 min-h-[44px] shrink-0"
+              className="rounded-full bg-[var(--color-accent)] text-white font-semibold px-4 py-3 min-h-[44px] shrink-0 tap-bounce"
             >
               {saved ? 'Saved' : 'Save'}
             </button>
@@ -121,13 +121,13 @@ export function Settings() {
         <p className="text-xs text-[var(--color-text-muted)] mb-3">
           Tap a food to edit or delete it.
         </p>
-        <div className="rounded-xl bg-[var(--color-card)] border border-white/10 max-h-[320px] overflow-y-auto">
+        <div className="rounded-3xl bg-[var(--color-card)] shadow-[var(--shadow-card)] max-h-[320px] overflow-y-auto">
           {foods.length === 0 ? (
             <p className="p-4 text-center text-[var(--color-text-muted)] text-sm">
               No saved foods yet.
             </p>
           ) : (
-            <ul className="divide-y divide-white/10">
+            <ul className="divide-y divide-[var(--color-card-soft)]">
               {foods.map((food) =>
                 editingFoodId === food.id ? (
                   <li key={food.id}>
@@ -149,7 +149,7 @@ export function Settings() {
                     <button
                       type="button"
                       onClick={() => setEditingFoodId(food.id)}
-                      className="w-full flex items-center justify-between gap-2 px-4 py-3 text-left min-h-[44px] hover:bg-white/5"
+                      className="w-full flex items-center justify-between gap-2 px-4 py-3 text-left min-h-[48px] hover:bg-[var(--color-card-soft)] tap-bounce"
                     >
                       <span className="font-medium text-[var(--color-text)] truncate">
                         {food.name}
@@ -202,14 +202,14 @@ function FoodEditForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="px-4 py-3 space-y-3 bg-white/5 border-t border-white/10"
+      className="px-4 py-3 space-y-3 bg-[var(--color-card-soft)] border-t border-[var(--color-card-soft)]"
     >
       <input
         type="text"
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="Food name"
-        className="w-full rounded-lg bg-[var(--color-card)] border border-white/10 px-3 py-2 text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] min-h-[44px]"
+        className="w-full rounded-2xl bg-[var(--color-card)] shadow-[var(--shadow-card)] px-3 py-2 text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] min-h-[44px] border-0"
       />
       <div className="grid grid-cols-2 gap-2">
         <label className="text-xs text-[var(--color-text-muted)]">
@@ -220,7 +220,7 @@ function FoodEditForm({
             step={1}
             value={calories}
             onChange={(e) => setCalories(e.target.value)}
-            className="block w-full rounded-lg bg-[var(--color-card)] border border-white/10 px-3 py-2 text-[var(--color-text)] min-h-[44px] mt-0.5"
+            className="block w-full rounded-2xl bg-[var(--color-card)] shadow-[var(--shadow-card)] px-3 py-2 text-[var(--color-text)] min-h-[44px] mt-0.5 border-0"
           />
         </label>
         <label className="text-xs text-[var(--color-text-muted)]">
@@ -231,7 +231,7 @@ function FoodEditForm({
             step={0.5}
             value={protein}
             onChange={(e) => setProtein(e.target.value)}
-            className="block w-full rounded-lg bg-[var(--color-card)] border border-white/10 px-3 py-2 text-[var(--color-text)] min-h-[44px] mt-0.5"
+            className="block w-full rounded-2xl bg-[var(--color-card)] shadow-[var(--shadow-card)] px-3 py-2 text-[var(--color-text)] min-h-[44px] mt-0.5 border-0"
           />
         </label>
         <label className="text-xs text-[var(--color-text-muted)]">
@@ -242,7 +242,7 @@ function FoodEditForm({
             step={0.5}
             value={carbs}
             onChange={(e) => setCarbs(e.target.value)}
-            className="block w-full rounded-lg bg-[var(--color-card)] border border-white/10 px-3 py-2 text-[var(--color-text)] min-h-[44px] mt-0.5"
+            className="block w-full rounded-2xl bg-[var(--color-card)] shadow-[var(--shadow-card)] px-3 py-2 text-[var(--color-text)] min-h-[44px] mt-0.5 border-0"
           />
         </label>
         <label className="text-xs text-[var(--color-text-muted)]">
@@ -253,21 +253,21 @@ function FoodEditForm({
             step={0.5}
             value={fat}
             onChange={(e) => setFat(e.target.value)}
-            className="block w-full rounded-lg bg-[var(--color-card)] border border-white/10 px-3 py-2 text-[var(--color-text)] min-h-[44px] mt-0.5"
+            className="block w-full rounded-2xl bg-[var(--color-card)] shadow-[var(--shadow-card)] px-3 py-2 text-[var(--color-text)] min-h-[44px] mt-0.5 border-0"
           />
         </label>
       </div>
       <div className="flex gap-2">
         <button
           type="submit"
-          className="flex-1 rounded-lg bg-[var(--color-accent)] text-[var(--color-bg)] font-medium py-2 min-h-[44px]"
+          className="flex-1 rounded-full bg-[var(--color-accent)] text-white font-semibold py-2 min-h-[44px] tap-bounce"
         >
           Save
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="p-2 rounded-lg text-[var(--color-text-muted)] hover:bg-white/10 min-h-[44px] min-w-[44px]"
+          className="p-2 rounded-full text-[var(--color-text-muted)] hover:bg-[var(--color-card)] min-h-[44px] min-w-[44px] tap-bounce"
           aria-label="Cancel"
         >
           ×
@@ -275,7 +275,7 @@ function FoodEditForm({
         <button
           type="button"
           onClick={onDelete}
-          className="rounded-lg border border-[var(--color-danger)] text-[var(--color-danger)] font-medium px-3 py-2 min-h-[44px]"
+          className="rounded-full border-2 border-[var(--color-danger)] text-[var(--color-danger)] font-semibold px-3 py-2 min-h-[44px] tap-bounce"
         >
           Delete
         </button>

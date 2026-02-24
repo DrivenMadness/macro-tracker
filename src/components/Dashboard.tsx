@@ -51,26 +51,26 @@ export function Dashboard({ dailyLog, onAddFood }: DashboardProps) {
   return (
     <div className="max-w-lg mx-auto px-4 pb-6">
       {/* Date + Day type toggle */}
-      <div className="py-4">
+      <div className="py-5">
         <button
           type="button"
           onClick={goToToday}
-          className="text-left"
+          className="text-left tap-bounce"
         >
-          <p className="text-2xl font-semibold text-[var(--color-text)]">
+          <p className="text-2xl font-bold text-[var(--color-text)]">
             {dayLabel}
           </p>
-          <p className="text-sm text-[var(--color-text-muted)]">{date}</p>
+          <p className="text-sm text-[var(--color-text-muted)] mt-0.5">{date}</p>
         </button>
 
-        <div className="flex gap-2 mt-3">
+        <div className="flex gap-2 mt-4">
           <button
             type="button"
             onClick={() => setDayType('rest')}
-            className={`flex-1 rounded-xl py-3 px-4 font-medium min-h-[44px] transition-colors ${
+            className={`flex-1 rounded-full py-3 px-4 font-semibold min-h-[48px] transition-all duration-200 tap-bounce ${
               log.day_type === 'rest'
-                ? 'bg-[var(--color-accent)] text-[var(--color-bg)]'
-                : 'bg-[var(--color-card)] text-[var(--color-text-muted)]'
+                ? 'bg-[var(--color-accent)] text-white shadow-[var(--shadow-soft)]'
+                : 'bg-[var(--color-card)] text-[var(--color-text-muted)] shadow-[var(--shadow-card)]'
             }`}
           >
             Rest Day
@@ -78,10 +78,10 @@ export function Dashboard({ dailyLog, onAddFood }: DashboardProps) {
           <button
             type="button"
             onClick={() => setDayType('lift')}
-            className={`flex-1 rounded-xl py-3 px-4 font-medium min-h-[44px] transition-colors ${
+            className={`flex-1 rounded-full py-3 px-4 font-semibold min-h-[48px] transition-all duration-200 tap-bounce ${
               log.day_type === 'lift'
-                ? 'bg-[var(--color-accent)] text-[var(--color-bg)]'
-                : 'bg-[var(--color-card)] text-[var(--color-text-muted)]'
+                ? 'bg-[var(--color-accent)] text-white shadow-[var(--shadow-soft)]'
+                : 'bg-[var(--color-card)] text-[var(--color-text-muted)] shadow-[var(--shadow-card)]'
             }`}
           >
             Lift Day
@@ -89,8 +89,8 @@ export function Dashboard({ dailyLog, onAddFood }: DashboardProps) {
         </div>
       </div>
 
-      {/* Progress */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-4">
+      {/* Circular progress rings */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-5">
         <ProgressRing
           value={totals.calories}
           target={t.calories}
@@ -119,10 +119,11 @@ export function Dashboard({ dailyLog, onAddFood }: DashboardProps) {
         />
       </div>
 
-      {/* Today's log */}
-      <div className="space-y-3">
+      {/* Today's log with emoji */}
+      <div className="space-y-4">
         <MealSection
           title="Today"
+          emoji="🍽️"
           entries={entries}
           foodById={foodById}
           onAdd={onAddFood}

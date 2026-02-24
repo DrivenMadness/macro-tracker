@@ -15,14 +15,14 @@ import { useWeeklyData } from '../hooks/useWeeklyData';
 import { Flame, Target, TrendingUp } from 'lucide-react';
 
 const CHART_COLORS = {
-  calories: '#4ADE80',
-  protein: '#60A5FA',
-  proteinPie: '#60A5FA',
-  carbsPie: '#FBBF24',
-  fatPie: '#F472B6',
+  calories: '#5BA872',
+  protein: '#6B9BD1',
+  proteinPie: '#6B9BD1',
+  carbsPie: '#E8C547',
+  fatPie: '#E8A0B0',
 };
-const AXIS_STROKE = '#9CA3AF';
-const GRID_STROKE = 'rgba(255,255,255,0.08)';
+const AXIS_STROKE = '#6B7280';
+const GRID_STROKE = 'rgba(45,49,66,0.08)';
 
 export function WeeklySummary() {
   const {
@@ -58,7 +58,7 @@ export function WeeklySummary() {
 
   return (
     <div className="max-w-lg mx-auto px-4 pb-24">
-      <h1 className="text-xl font-semibold text-[var(--color-text)] pt-4 pb-2">
+      <h1 className="text-xl font-bold text-[var(--color-text)] pt-4 pb-2">
         Summary
       </h1>
       <p className="text-sm text-[var(--color-text-muted)] mb-6">
@@ -66,7 +66,7 @@ export function WeeklySummary() {
       </p>
 
       {/* Weekly bar chart: calories + protein */}
-      <section className="rounded-xl bg-[var(--color-card)] p-4 mb-4">
+      <section className="rounded-3xl bg-[var(--color-card)] p-4 mb-4 shadow-[var(--shadow-card)]">
         <h2 className="text-sm font-medium text-[var(--color-text-muted)] mb-3">
           Daily calories & protein
         </h2>
@@ -144,12 +144,12 @@ export function WeeklySummary() {
       </section>
 
       {/* Streak */}
-      <section className="rounded-xl bg-[var(--color-card)] p-4 mb-4">
+      <section className="rounded-3xl bg-[var(--color-card)] p-4 mb-4 shadow-[var(--shadow-card)]">
         <h2 className="text-sm font-medium text-[var(--color-text-muted)] mb-2">
           Streak
         </h2>
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-[var(--color-accent)]/20 flex items-center justify-center">
+          <div className="w-12 h-12 rounded-2xl bg-[var(--color-accent-soft)] flex items-center justify-center">
             <TrendingUp className="w-6 h-6 text-[var(--color-accent)]" />
           </div>
           <div>
@@ -164,30 +164,30 @@ export function WeeklySummary() {
       </section>
 
       {/* Weekly averages */}
-      <section className="rounded-xl bg-[var(--color-card)] p-4 mb-4">
+      <section className="rounded-3xl bg-[var(--color-card)] p-4 mb-4 shadow-[var(--shadow-card)]">
         <h2 className="text-sm font-medium text-[var(--color-text-muted)] mb-3">
           Weekly averages
         </h2>
         <div className="grid grid-cols-2 gap-3">
-          <div className="flex items-center gap-2 rounded-lg bg-[var(--color-bg)]/60 px-3 py-2.5">
+          <div className="flex items-center gap-2 rounded-2xl bg-[var(--color-card-soft)] px-3 py-2.5">
             <Flame className="w-4 h-4 text-[var(--color-accent)] shrink-0" />
             <div>
               <p className="text-lg font-semibold text-[var(--color-text)]">{avgCalories}</p>
               <p className="text-xs text-[var(--color-text-muted)]">Cal / day</p>
             </div>
           </div>
-          <div className="flex items-center gap-2 rounded-lg bg-[var(--color-bg)]/60 px-3 py-2.5">
+          <div className="flex items-center gap-2 rounded-2xl bg-[var(--color-card-soft)] px-3 py-2.5">
             <Target className="w-4 h-4 text-[var(--color-protein)] shrink-0" />
             <div>
               <p className="text-lg font-semibold text-[var(--color-text)]">{avgProtein}g</p>
               <p className="text-xs text-[var(--color-text-muted)]">Protein / day</p>
             </div>
           </div>
-          <div className="rounded-lg bg-[var(--color-bg)]/60 px-3 py-2.5">
+          <div className="rounded-2xl bg-[var(--color-card-soft)] px-3 py-2.5">
             <p className="text-lg font-semibold text-[var(--color-text)]">{avgCarbs}g</p>
             <p className="text-xs text-[var(--color-text-muted)]">Carbs / day</p>
           </div>
-          <div className="rounded-lg bg-[var(--color-bg)]/60 px-3 py-2.5">
+          <div className="rounded-2xl bg-[var(--color-card-soft)] px-3 py-2.5">
             <p className="text-lg font-semibold text-[var(--color-text)]">{avgFat}g</p>
             <p className="text-xs text-[var(--color-text-muted)]">Fat / day</p>
           </div>
@@ -196,7 +196,7 @@ export function WeeklySummary() {
 
       {/* Macro breakdown pie */}
       {pieData.length > 0 && (
-        <section className="rounded-xl bg-[var(--color-card)] p-4 mb-4">
+        <section className="rounded-3xl bg-[var(--color-card)] p-4 mb-4 shadow-[var(--shadow-card)]">
           <h2 className="text-sm font-medium text-[var(--color-text-muted)] mb-3">
             Macro split (week)
           </h2>
@@ -233,17 +233,17 @@ export function WeeklySummary() {
       )}
 
       {/* Rest vs Lift comparison */}
-      <section className="rounded-xl bg-[var(--color-card)] p-4 mb-4">
+      <section className="rounded-3xl bg-[var(--color-card)] p-4 mb-4 shadow-[var(--shadow-card)]">
         <h2 className="text-sm font-medium text-[var(--color-text-muted)] mb-3">
           Rest vs Lift days
         </h2>
         <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-lg bg-[var(--color-bg)]/60 p-3 border border-white/5">
+          <div className="rounded-2xl bg-[var(--color-card-soft)] p-3 shadow-[var(--shadow-card)]">
             <p className="text-xs font-medium text-[var(--color-text-muted)] mb-1">Rest day avg</p>
             <p className="text-lg font-semibold text-[var(--color-text)]">{avgRestCalories} cal</p>
             <p className="text-sm text-[var(--color-protein)]">{avgRestProtein}g protein</p>
           </div>
-          <div className="rounded-lg bg-[var(--color-bg)]/60 p-3 border border-white/5">
+          <div className="rounded-2xl bg-[var(--color-card-soft)] p-3 shadow-[var(--shadow-card)]">
             <p className="text-xs font-medium text-[var(--color-text-muted)] mb-1">Lift day avg</p>
             <p className="text-lg font-semibold text-[var(--color-text)]">{avgLiftCalories} cal</p>
             <p className="text-sm text-[var(--color-protein)]">{avgLiftProtein}g protein</p>

@@ -6,7 +6,6 @@ interface ProgressRingProps {
   label: string;
   unit?: string;
   colorClass?: string;
-  /** For calories: 'green' | 'yellow' | 'red' based on target */
   variant?: 'default' | 'calories';
   children?: ReactNode;
 }
@@ -24,8 +23,8 @@ export function ProgressRing({
   const displayPct = target > 0 ? Math.round((value / target) * 100) : 0;
   const displayValue = Math.trunc(value);
   const displayTarget = Math.trunc(target);
-  const stroke = 8;
-  const r = 36;
+  const stroke = 10;
+  const r = 38;
   const circumference = 2 * Math.PI * r;
   const dash = pct * circumference;
 
@@ -37,20 +36,20 @@ export function ProgressRing({
   }
 
   return (
-    <div className="flex flex-col items-center gap-1">
+    <div className="flex flex-col items-center gap-1.5 animate-pop-in">
       <div className="relative inline-flex items-center justify-center">
-        <svg width="88" height="88" className="-rotate-90" aria-hidden>
+        <svg width="96" height="96" className="-rotate-90" aria-hidden>
           <circle
-            cx="44"
-            cy="44"
+            cx="48"
+            cy="48"
             r={r}
             fill="none"
-            stroke="var(--color-card)"
+            stroke="var(--color-card-soft)"
             strokeWidth={stroke}
           />
           <circle
-            cx="44"
-            cy="44"
+            cx="48"
+            cy="48"
             r={r}
             fill="none"
             stroke={strokeColor}
@@ -58,15 +57,15 @@ export function ProgressRing({
             strokeDasharray={circumference}
             strokeDashoffset={circumference - dash}
             strokeLinecap="round"
-            className="transition-[stroke-dashoffset] duration-500"
+            className="transition-[stroke-dashoffset] duration-500 ease-out"
           />
         </svg>
-        <span className="absolute text-sm font-semibold text-[var(--color-text)]">
+        <span className="absolute text-sm font-bold text-[var(--color-text)]">
           {children ?? `${displayPct}%`}
         </span>
       </div>
-      <span className="text-xs text-[var(--color-text-muted)]">{label}</span>
-      <span className={`text-xs font-medium ${colorClass}`}>
+      <span className="text-xs font-medium text-[var(--color-text-muted)]">{label}</span>
+      <span className={`text-xs font-semibold ${colorClass}`}>
         {displayValue} / {displayTarget} {unit}
       </span>
     </div>
