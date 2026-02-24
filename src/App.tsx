@@ -23,6 +23,7 @@ function App() {
   const swipeLock = useRef(false);
   const gestureActive = useRef(false);
   const mainRef = useRef<HTMLElement>(null);
+  const sectionsRef = useRef<(HTMLElement | null)[]>([]);
 
   const [addFoodOpen, setAddFoodOpen] = useState(false);
 
@@ -159,6 +160,14 @@ function App() {
     return () => el.removeEventListener('touchmove', onTouchMove);
   }, []);
 
+  // Always scroll the newly active tab back to top
+  useEffect(() => {
+    const current = sectionsRef.current[tabIndex];
+    if (current) {
+      current.scrollTo({ top: 0, behavior: 'auto' });
+    }
+  }, [tabIndex]);
+
   const slideStyle = {
     transform: `translateX(calc(-${tabIndex * (100 / TABS.length)}% + ${dragPx}px))`,
     transition: isDragging ? 'none' : 'transform 0.25s ease-out',
@@ -178,13 +187,23 @@ function App() {
           className="flex min-h-screen"
           style={{ width: `${TABS.length * 100}%`, ...slideStyle }}
         >
-          <section className="shrink-0 overflow-y-auto" style={{ width: `${100 / TABS.length}%` }} aria-label="Dashboard">
+          <section
+            ref={(el) => { sectionsRef.current[0] = el; }}
+            className="shrink-0 overflow-y-auto"
+            style={{ width: `${100 / TABS.length}%` }}
+            aria-label="Dashboard"
+          >
             <Dashboard
               dailyLog={dailyLog}
               onAddFood={() => setAddFoodOpen(true)}
             />
           </section>
-          <section className="shrink-0 overflow-y-auto" style={{ width: `${100 / TABS.length}%` }} aria-label="Add food">
+          <section
+            ref={(el) => { sectionsRef.current[1] = el; }}
+            className="shrink-0 overflow-y-auto"
+            style={{ width: `${100 / TABS.length}%` }}
+            aria-label="Add food"
+          >
             <div className="max-w-lg mx-auto px-4 py-8">
               <div className="flex items-start justify-between gap-3 mb-2">
                 <div>
@@ -207,10 +226,20 @@ function App() {
               </button>
             </div>
           </section>
-          <section className="shrink-0 overflow-y-auto" style={{ width: `${100 / TABS.length}%` }} aria-label="History">
+          <section
+            ref={(el) => { sectionsRef.current[2] = el; }}
+            className="shrink-0 overflow-y-auto"
+            style={{ width: `${100 / TABS.length}%` }}
+            aria-label="History"
+          >
             <WeeklySummary />
           </section>
-          <section className="shrink-0 overflow-y-auto" style={{ width: `${100 / TABS.length}%` }} aria-label="Settings">
+          <section
+            ref={(el) => { sectionsRef.current[3] = el; }}
+            className="shrink-0 overflow-y-auto"
+            style={{ width: `${100 / TABS.length}%` }}
+            aria-label="Settings"
+          >
             <SettingsScreen />
           </section>
         </div>
