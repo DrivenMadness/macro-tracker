@@ -58,12 +58,17 @@ export function WeeklySummary() {
 
   return (
     <div className="max-w-lg mx-auto px-4 pb-24">
-      <h2 className="text-xl font-bold text-[var(--color-text)] pt-4 pb-2">
-        Summary
-      </h2>
-      <p className="text-sm text-[var(--color-text-muted)] mb-6">
-        Past 7 days
-      </p>
+      <div className="flex items-start justify-between gap-3 pt-4 pb-2">
+        <div>
+          <h2 className="text-xl font-bold text-[var(--color-text)]">Summary</h2>
+          <p className="text-sm text-[var(--color-text-muted)] mt-0.5">Past 7 days</p>
+        </div>
+        <div className="flex items-center gap-1.5 shrink-0" aria-label="NutriBuddy">
+          <img src="/icons/chibi.svg" alt="" className="w-8 h-8" aria-hidden />
+          <span className="text-sm font-bold text-[var(--color-text)]">NutriBuddy</span>
+        </div>
+      </div>
+      <div className="mb-6" />
 
       {/* Weekly bar chart: calories + protein */}
       <section className="rounded-3xl bg-[var(--color-card)] p-4 mb-4 shadow-[var(--shadow-card)]">

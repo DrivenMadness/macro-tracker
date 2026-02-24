@@ -42,18 +42,21 @@ export function AddFood({ onAdd, onPhotoScanConfirm, onManualAdd, onClose, foods
   return (
     <div className="fixed inset-0 z-50 bg-[var(--color-bg)] flex flex-col">
       <header className="flex items-center justify-between px-4 py-3 border-b border-[var(--color-card-soft)] shrink-0 bg-[var(--color-card)] shadow-[var(--shadow-card)]">
+        <h2 className="text-lg font-bold text-[var(--color-text)]">Add food</h2>
         <div className="flex items-center gap-2">
-          <img src="/icons/chibi.svg" alt="" className="w-8 h-8 shrink-0" aria-hidden />
-          <h2 className="text-lg font-bold text-[var(--color-text)]">NutriBuddy · Add food</h2>
+          <div className="flex items-center gap-1.5" aria-label="NutriBuddy">
+            <img src="/icons/chibi.svg" alt="" className="w-8 h-8 shrink-0" aria-hidden />
+            <span className="text-sm font-bold text-[var(--color-text)]">NutriBuddy</span>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="p-2 rounded-full text-[var(--color-text-muted)] hover:bg-[var(--color-card-soft)] min-h-[44px] min-w-[44px] flex items-center justify-center tap-bounce"
+            aria-label="Close"
+          >
+            <X className="w-6 h-6" />
+          </button>
         </div>
-        <button
-          type="button"
-          onClick={onClose}
-          className="p-2 rounded-full text-[var(--color-text-muted)] hover:bg-[var(--color-card-soft)] min-h-[44px] min-w-[44px] flex items-center justify-center tap-bounce"
-          aria-label="Close"
-        >
-          <X className="w-6 h-6" />
-        </button>
       </header>
 
       <div className="flex-1 overflow-auto px-4 py-4">

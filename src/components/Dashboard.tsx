@@ -51,17 +51,22 @@ export function Dashboard({ dailyLog, onAddFood }: DashboardProps) {
   return (
     <div className="max-w-lg mx-auto px-4 pb-6">
       {/* Date + Day type toggle */}
-      <div className="py-5">
+      <div className="py-5 flex items-start justify-between gap-3">
         <button
           type="button"
           onClick={goToToday}
-          className="text-left tap-bounce"
+          className="text-left tap-bounce shrink-0"
         >
           <p className="text-2xl font-bold text-[var(--color-text)]">
             {dayLabel}
           </p>
           <p className="text-sm text-[var(--color-text-muted)] mt-0.5">{date}</p>
         </button>
+        <div className="flex items-center gap-1.5 shrink-0 pt-0.5" aria-label="NutriBuddy">
+          <img src="/icons/chibi.svg" alt="" className="w-8 h-8" aria-hidden />
+          <span className="text-sm font-bold text-[var(--color-text)]">NutriBuddy</span>
+        </div>
+      </div>
 
         <div className="flex gap-2 mt-4">
           <button
@@ -87,7 +92,6 @@ export function Dashboard({ dailyLog, onAddFood }: DashboardProps) {
             Lift Day
           </button>
         </div>
-      </div>
 
       {/* Circular progress rings */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-5">
