@@ -55,17 +55,23 @@ export async function analyzeFoodPhoto(
     },
   ];
 
-  const apiUrl = import.meta.env.DEV
+  const isDev = import.meta.env.DEV;
+  const apiUrl = isDev
     ? '/api/anthropic/v1/messages'
-    : 'https://api.anthropic.com/v1/messages';
+    : '/api/anthropic-messages';
+
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...(isDev && { 'anthropic-dangerous-direct-browser-access': 'true' }),
+  };
+  if (isDev) {
+    headers['x-api-key'] = apiKey;
+    headers['anthropic-version'] = '2023-06-01';
+  }
+
   const response = await fetch(apiUrl, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true',
-    },
+    headers,
     body: JSON.stringify({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 1024,

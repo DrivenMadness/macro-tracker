@@ -10,6 +10,7 @@ The app is configured to build and run on Vercel. Once deployed, you get a **pub
    - Go to [vercel.com](https://vercel.com) and sign in (GitHub).
    - Click **Add New… → Project** and import your repo.
    - Vercel will use `vercel.json`: build command `npm run build`, output `dist`. No extra settings needed.
+   - **Photo Scan (production):** In the project, go to **Settings → Environment Variables**. Add `ANTHROPIC_API_KEY` with your [Anthropic API key](https://console.anthropic.com/). Redeploy so the serverless proxy can use it.
    - Click **Deploy**.
 
 3. **Use the URL**

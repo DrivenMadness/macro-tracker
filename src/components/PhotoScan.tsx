@@ -21,11 +21,13 @@ export function PhotoScan({ onBack, onConfirm }: PhotoScanProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const apiKey = getClaudeApiKey();
+  const useProxy = import.meta.env.PROD;
+  const canScan = useProxy || apiKey;
 
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (!apiKey) {
+    if (!canScan) {
       setError('Add your Claude API key in Settings first.');
       setStep('error');
       return;
@@ -200,7 +202,7 @@ export function PhotoScan({ onBack, onConfirm }: PhotoScanProps) {
         <ArrowLeft className="w-5 h-5" />
         Back
       </button>
-      {!apiKey && (
+      {!canScan && (
         <p className="text-sm text-[var(--color-warning)] mb-3">
           Add your Claude API key in Settings to use photo scan.
         </p>
@@ -227,7 +229,7 @@ export function PhotoScan({ onBack, onConfirm }: PhotoScanProps) {
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
-          disabled={!apiKey}
+          disabled={!canScan}
           className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-[var(--color-card)] border border-white/10 text-[var(--color-text)] px-4 py-4 min-h-[44px] disabled:opacity-50"
         >
           <Camera className="w-6 h-6" />
@@ -236,7 +238,7 @@ export function PhotoScan({ onBack, onConfirm }: PhotoScanProps) {
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
-          disabled={!apiKey}
+          disabled={!canScan}
           className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-[var(--color-card)] border border-white/10 text-[var(--color-text)] px-4 py-4 min-h-[44px] disabled:opacity-50"
         >
           <ImagePlus className="w-6 h-6" />
