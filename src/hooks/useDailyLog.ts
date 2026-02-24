@@ -121,6 +121,29 @@ export function useDailyLog() {
     [log, persistLog]
   );
 
+  const updateEntry = useCallback(
+    (
+      entryId: string,
+      updates: Partial<{
+        custom_name: string | null;
+        calories: number;
+        protein: number;
+        carbs: number;
+        fat: number;
+        quantity: number;
+      }>
+    ) => {
+      if (!log) return;
+      persistLog({
+        ...log,
+        entries: log.entries.map((e) =>
+          e.id === entryId ? { ...e, ...updates } : e
+        ),
+      });
+    },
+    [log, persistLog]
+  );
+
   const removeEntry = useCallback(
     (entryId: string) => {
       if (!log) return;
@@ -157,6 +180,7 @@ export function useDailyLog() {
     setDayType,
     addEntry,
     updateEntryQuantity,
+    updateEntry,
     removeEntry,
     goToToday,
     entries,

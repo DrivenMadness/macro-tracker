@@ -9,7 +9,12 @@ function loadTargets(): MacroTargets {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw) as MacroTargets;
-      if (parsed.rest && parsed.lift) return parsed;
+      if (parsed.rest && parsed.lift) {
+        return {
+          rest: { ...DEFAULT_TARGETS.rest, ...parsed.rest },
+          lift: { ...DEFAULT_TARGETS.lift, ...parsed.lift },
+        };
+      }
     }
   } catch {
     // ignore
@@ -33,7 +38,7 @@ export function useMacroTargets() {
   }, []);
 
   const updateDayTypeTarget = useCallback(
-    (dayType: DayType, key: 'protein' | 'calories', value: number) => {
+    (dayType: DayType, key: keyof import('../lib/types').DayTarget, value: number) => {
       setTargetsState((prev) => ({
         ...prev,
         [dayType]: { ...prev[dayType], [key]: value },

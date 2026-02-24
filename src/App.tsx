@@ -60,6 +60,31 @@ function App() {
     setAddFoodOpen(false);
   };
 
+  const handleManualAdd = (
+    entry: { custom_name: string; calories: number; protein: number; carbs: number; fat: number },
+    saveToDb: boolean
+  ) => {
+    addEntry({
+      food_item_id: null,
+      custom_name: entry.custom_name,
+      calories: entry.calories,
+      protein: entry.protein,
+      carbs: entry.carbs,
+      fat: entry.fat,
+      quantity: 1,
+    });
+    if (saveToDb && entry.custom_name.trim()) {
+      addFood({
+        name: entry.custom_name.trim(),
+        calories: entry.calories,
+        protein: entry.protein,
+        carbs: entry.carbs,
+        fat: entry.fat,
+      });
+    }
+    setAddFoodOpen(false);
+  };
+
   return (
     <>
       <main className="min-h-screen">
@@ -94,6 +119,7 @@ function App() {
         <AddFood
           onAdd={handleFoodAdded}
           onPhotoScanConfirm={handlePhotoScanConfirm}
+          onManualAdd={handleManualAdd}
           onClose={() => setAddFoodOpen(false)}
           foods={foods}
         />

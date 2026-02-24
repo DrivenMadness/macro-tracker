@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronRight, Plus, Trash2 } from 'lucide-react';
+import { ChevronDown, ChevronRight, Plus, Trash2, Pencil, Check, X } from 'lucide-react';
 import type { MealEntry } from '../lib/types';
 import type { FoodItem } from '../lib/types';
 
@@ -9,6 +9,17 @@ interface MealSectionProps {
   foodById: (id: string | null) => FoodItem | undefined;
   onAdd: () => void;
   onRemove: (entryId: string) => void;
+  onUpdateEntry: (
+    entryId: string,
+    updates: Partial<{
+      custom_name: string | null;
+      calories: number;
+      protein: number;
+      carbs: number;
+      fat: number;
+      quantity: number;
+    }>
+  ) => void;
 }
 
 export function MealSection({
@@ -17,8 +28,10 @@ export function MealSection({
   foodById,
   onAdd,
   onRemove,
+  onUpdateEntry,
 }: MealSectionProps) {
   const [expanded, setExpanded] = useState(true);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   const subtotal = entries.reduce(
     (acc, e) => ({
@@ -69,35 +82,62 @@ export function MealSection({
             <ul className="divide-y divide-white/10">
               {entries.map((entry) => {
                 const food = entry.food_item_id ? foodById(entry.food_item_id) : null;
-                const name = entry.custom_name ?? food?.name ?? 'Unknown';
+                const displayName = entry.custom_name ?? food?.name ?? 'Unknown';
                 const cal = Math.round(entry.calories * entry.quantity);
                 const pro = Math.round(entry.protein * entry.quantity);
+                const isEditing = editingId === entry.id;
+
                 return (
-                  <li
-                    key={entry.id}
-                    className="group flex items-center justify-between gap-2 px-4 py-3"
-                  >
-                    <div className="min-w-0 flex-1">
-                      <p className="text-[var(--color-text)] truncate">
-                        {name}
-                        {entry.quantity !== 1 && (
-                          <span className="text-[var(--color-text-muted)] ml-1">
-                            ×{entry.quantity}
-                          </span>
-                        )}
-                      </p>
-                      <p className="text-xs text-[var(--color-text-muted)]">
-                        {cal} cal · {pro}g protein
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => onRemove(entry.id)}
-                      className="p-2 rounded-lg text-[var(--color-text-muted)] hover:text-[var(--color-danger)] hover:bg-white/5 min-h-[44px] min-w-[44px] flex items-center justify-center"
-                      aria-label="Remove"
-                    >
-                      <Trash2 className="w-5 h-5" />
-                    </button>
+                  <li key={entry.id}>
+                    {isEditing ? (
+                      <EntryEditForm
+                        entry={entry}
+                        displayName={displayName}
+                        onSave={(updates) => {
+                          onUpdateEntry(entry.id, updates);
+                          setEditingId(null);
+                        }}
+                        onDelete={() => {
+                          onRemove(entry.id);
+                          setEditingId(null);
+                        }}
+                        onCancel={() => setEditingId(null)}
+                      />
+                    ) : (
+                      <div className="group flex items-center gap-2 px-4 py-3">
+                        <button
+                          type="button"
+                          onClick={() => setEditingId(entry.id)}
+                          className="min-w-0 flex-1 flex items-center justify-between gap-2 text-left min-h-[44px] rounded-lg hover:bg-white/5"
+                        >
+                          <div className="min-w-0 flex-1">
+                            <p className="text-[var(--color-text)] truncate">
+                              {displayName}
+                              {entry.quantity !== 1 && (
+                                <span className="text-[var(--color-text-muted)] ml-1">
+                                  ×{entry.quantity}
+                                </span>
+                              )}
+                            </p>
+                            <p className="text-xs text-[var(--color-text-muted)]">
+                              {cal} cal · {pro}g protein
+                            </p>
+                          </div>
+                          <Pencil className="w-4 h-4 text-[var(--color-text-muted)] shrink-0 opacity-0 group-hover:opacity-100" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onRemove(entry.id);
+                          }}
+                          className="p-2 rounded-lg text-[var(--color-text-muted)] hover:text-[var(--color-danger)] hover:bg-white/5 min-h-[44px] min-w-[44px] flex items-center justify-center"
+                          aria-label="Remove"
+                        >
+                          <Trash2 className="w-5 h-5" />
+                        </button>
+                      </div>
+                    )}
                   </li>
                 );
               })}
@@ -122,5 +162,141 @@ export function MealSection({
         </div>
       )}
     </section>
+  );
+}
+
+interface EntryEditFormProps {
+  entry: MealEntry;
+  displayName: string;
+  onSave: (updates: {
+    custom_name: string | null;
+    calories: number;
+    protein: number;
+    carbs: number;
+    fat: number;
+    quantity: number;
+  }) => void;
+  onDelete: () => void;
+  onCancel: () => void;
+}
+
+function EntryEditForm({
+  entry,
+  displayName,
+  onSave,
+  onDelete,
+  onCancel,
+}: EntryEditFormProps) {
+  const [name, setName] = useState(displayName);
+  const [calories, setCalories] = useState(String(entry.calories));
+  const [protein, setProtein] = useState(String(entry.protein));
+  const [carbs, setCarbs] = useState(String(entry.carbs));
+  const [fat, setFat] = useState(String(entry.fat));
+  const [quantity, setQuantity] = useState(String(entry.quantity));
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSave({
+      custom_name: name.trim() || null,
+      calories: Number(calories) || 0,
+      protein: Number(protein) || 0,
+      carbs: Number(carbs) || 0,
+      fat: Number(fat) || 0,
+      quantity: Number(quantity) || 1,
+    });
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="px-4 py-3 space-y-3 bg-white/5 border-y border-white/10">
+      <input
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        placeholder="Food name"
+        className="w-full rounded-lg bg-[var(--color-card)] border border-white/10 px-3 py-2 text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] min-h-[44px]"
+      />
+      <div className="grid grid-cols-2 gap-2">
+        <label className="text-xs text-[var(--color-text-muted)]">
+          Cal
+          <input
+            type="number"
+            min={0}
+            step={1}
+            value={calories}
+            onChange={(e) => setCalories(e.target.value)}
+            className="block w-full rounded-lg bg-[var(--color-card)] border border-white/10 px-3 py-2 text-[var(--color-text)] min-h-[44px] mt-0.5"
+          />
+        </label>
+        <label className="text-xs text-[var(--color-text-muted)]">
+          Protein (g)
+          <input
+            type="number"
+            min={0}
+            step={0.5}
+            value={protein}
+            onChange={(e) => setProtein(e.target.value)}
+            className="block w-full rounded-lg bg-[var(--color-card)] border border-white/10 px-3 py-2 text-[var(--color-text)] min-h-[44px] mt-0.5"
+          />
+        </label>
+        <label className="text-xs text-[var(--color-text-muted)]">
+          Carbs (g)
+          <input
+            type="number"
+            min={0}
+            step={0.5}
+            value={carbs}
+            onChange={(e) => setCarbs(e.target.value)}
+            className="block w-full rounded-lg bg-[var(--color-card)] border border-white/10 px-3 py-2 text-[var(--color-text)] min-h-[44px] mt-0.5"
+          />
+        </label>
+        <label className="text-xs text-[var(--color-text-muted)]">
+          Fat (g)
+          <input
+            type="number"
+            min={0}
+            step={0.5}
+            value={fat}
+            onChange={(e) => setFat(e.target.value)}
+            className="block w-full rounded-lg bg-[var(--color-card)] border border-white/10 px-3 py-2 text-[var(--color-text)] min-h-[44px] mt-0.5"
+          />
+        </label>
+        <label className="text-xs text-[var(--color-text-muted)] col-span-2">
+          Quantity
+          <input
+            type="number"
+            min={0.25}
+            step={0.25}
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value)}
+            className="block w-full rounded-lg bg-[var(--color-card)] border border-white/10 px-3 py-2 text-[var(--color-text)] min-h-[44px] mt-0.5"
+          />
+        </label>
+      </div>
+      <div className="flex gap-2">
+        <button
+          type="submit"
+          className="flex-1 flex items-center justify-center gap-1 rounded-lg bg-[var(--color-accent)] text-[var(--color-bg)] font-medium py-2 min-h-[44px]"
+        >
+          <Check className="w-4 h-4" />
+          Save
+        </button>
+        <button
+          type="button"
+          onClick={onCancel}
+          className="p-2 rounded-lg text-[var(--color-text-muted)] hover:bg-white/10 min-h-[44px] min-w-[44px] flex items-center justify-center"
+          aria-label="Cancel"
+        >
+          <X className="w-5 h-5" />
+        </button>
+        <button
+          type="button"
+          onClick={onDelete}
+          className="flex items-center justify-center gap-1 rounded-lg border border-[var(--color-danger)] text-[var(--color-danger)] font-medium px-3 py-2 min-h-[44px]"
+        >
+          <Trash2 className="w-4 h-4" />
+          Delete
+        </button>
+      </div>
+    </form>
   );
 }

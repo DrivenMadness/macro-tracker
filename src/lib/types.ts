@@ -1,8 +1,15 @@
 export type DayType = 'rest' | 'lift';
 
+export interface DayTarget {
+  protein: number;
+  calories: number;
+  carbs: number;
+  fat: number;
+}
+
 export interface MacroTargets {
-  rest: { protein: number; calories: number };
-  lift: { protein: number; calories: number };
+  rest: DayTarget;
+  lift: DayTarget;
 }
 
 export interface FoodItem {
@@ -41,8 +48,8 @@ export interface DailyLog {
 }
 
 export const DEFAULT_TARGETS: MacroTargets = {
-  rest: { protein: 200, calories: 1800 },
-  lift: { protein: 200, calories: 2200 },
+  rest: { protein: 200, calories: 1800, carbs: 180, fat: 60 },
+  lift: { protein: 200, calories: 2200, carbs: 220, fat: 65 },
 };
 
 /** Result from Claude photo analysis — editable before adding to log */

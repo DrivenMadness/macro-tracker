@@ -21,7 +21,7 @@ interface DashboardProps {
 }
 
 export function Dashboard({ dailyLog, onAddFood }: DashboardProps) {
-  const { log, setDayType, entries, totals, removeEntry, goToToday, date } =
+  const { log, setDayType, entries, totals, removeEntry, updateEntry, goToToday, date } =
     dailyLog;
   const { targets } = useMacroTargets();
   const { foods } = useFoodDatabase();
@@ -107,13 +107,13 @@ export function Dashboard({ dailyLog, onAddFood }: DashboardProps) {
         />
         <ProgressRing
           value={totals.carbs}
-          target={t.calories / 4}
+          target={t.carbs}
           label="Carbs"
           colorClass="text-[var(--color-carbs)]"
         />
         <ProgressRing
           value={totals.fat}
-          target={t.calories / 9}
+          target={t.fat}
           label="Fat"
           colorClass="text-[var(--color-fat)]"
         />
@@ -127,6 +127,7 @@ export function Dashboard({ dailyLog, onAddFood }: DashboardProps) {
           foodById={foodById}
           onAdd={onAddFood}
           onRemove={removeEntry}
+          onUpdateEntry={updateEntry}
         />
       </div>
     </div>

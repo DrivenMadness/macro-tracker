@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { X, Camera } from 'lucide-react';
+import { X, Camera, Edit3 } from 'lucide-react';
 import { FoodSearch } from './FoodSearch';
 import { PhotoScan } from './PhotoScan';
+import { ManualAdd } from './ManualAdd';
 import type { FoodItem } from '../lib/types';
 import type { EstimatedFood } from '../lib/types';
 
@@ -17,12 +18,13 @@ interface AddFoodProps {
     quantity?: number;
   }) => void;
   onPhotoScanConfirm: (items: EstimatedFood[], saveToDb: boolean) => void;
+  onManualAdd: (entry: { custom_name: string; calories: number; protein: number; carbs: number; fat: number }, saveToDb: boolean) => void;
   onClose: () => void;
   foods: FoodItem[];
 }
 
-export function AddFood({ onAdd, onPhotoScanConfirm, onClose, foods }: AddFoodProps) {
-  const [view, setView] = useState<'search' | 'photo'>('search');
+export function AddFood({ onAdd, onPhotoScanConfirm, onManualAdd, onClose, foods }: AddFoodProps) {
+  const [view, setView] = useState<'search' | 'photo' | 'manual'>('search');
 
   const handleSelect = (food: FoodItem, quantity: number) => {
     onAdd({
@@ -56,14 +58,24 @@ export function AddFood({ onAdd, onPhotoScanConfirm, onClose, foods }: AddFoodPr
       <div className="flex-1 overflow-auto px-4 py-4">
         {view === 'search' && (
           <>
-            <button
-              type="button"
-              onClick={() => setView('photo')}
-              className="w-full flex items-center justify-center gap-2 rounded-xl bg-[var(--color-card)] border border-white/10 text-[var(--color-text)] px-4 py-3 mb-4 min-h-[44px]"
-            >
-              <Camera className="w-5 h-5" />
-              Scan photo
-            </button>
+            <div className="flex gap-2 mb-4">
+              <button
+                type="button"
+                onClick={() => setView('photo')}
+                className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-[var(--color-card)] border border-white/10 text-[var(--color-text)] px-4 py-3 min-h-[44px]"
+              >
+                <Camera className="w-5 h-5" />
+                Scan photo
+              </button>
+              <button
+                type="button"
+                onClick={() => setView('manual')}
+                className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-[var(--color-card)] border border-white/10 text-[var(--color-text)] px-4 py-3 min-h-[44px]"
+              >
+                <Edit3 className="w-5 h-5" />
+                Manual Add
+              </button>
+            </div>
             <FoodSearch
               foods={foods}
               onSelect={handleSelect}
@@ -75,6 +87,12 @@ export function AddFood({ onAdd, onPhotoScanConfirm, onClose, foods }: AddFoodPr
           <PhotoScan
             onBack={() => setView('search')}
             onConfirm={onPhotoScanConfirm}
+          />
+        )}
+        {view === 'manual' && (
+          <ManualAdd
+            onBack={() => setView('search')}
+            onSubmit={onManualAdd}
           />
         )}
       </div>
