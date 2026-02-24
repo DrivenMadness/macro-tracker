@@ -3,6 +3,22 @@ import { ChevronDown, ChevronRight, Plus, Trash2, Pencil, Check, X } from 'lucid
 import type { MealEntry } from '../lib/types';
 import type { FoodItem } from '../lib/types';
 
+const PORTION_OPTIONS = [
+  { value: 0.25, label: '¼' },
+  { value: 0.5, label: '½' },
+  { value: 0.75, label: '¾' },
+  { value: 1, label: '1' },
+  { value: 1.5, label: '1.5' },
+  { value: 2, label: '2' },
+] as const;
+
+function formatPortionSuffix(quantity: number): string {
+  if (quantity === 1) return '';
+  const option = PORTION_OPTIONS.find((o) => o.value === quantity);
+  if (option) return ` (${option.label})`;
+  return ` (${quantity})`;
+}
+
 interface MealSectionProps {
   title: string;
   emoji?: string;
@@ -34,6 +50,7 @@ export function MealSection({
 }: MealSectionProps) {
   const [expanded, setExpanded] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [portionEntryId, setPortionEntryId] = useState<string | null>(null);
 
   const subtotal = entries.reduce(
     (acc, e) => ({
@@ -86,9 +103,11 @@ export function MealSection({
               {entries.map((entry) => {
                 const food = entry.food_item_id ? foodById(entry.food_item_id) : null;
                 const displayName = entry.custom_name ?? food?.name ?? 'Unknown';
+                const portionSuffix = formatPortionSuffix(entry.quantity);
                 const cal = Math.round(entry.calories * entry.quantity);
                 const pro = Math.round(entry.protein * entry.quantity);
                 const isEditing = editingId === entry.id;
+                const showPortionSelector = portionEntryId === entry.id;
 
                 return (
                   <li key={entry.id}>
@@ -107,39 +126,67 @@ export function MealSection({
                         onCancel={() => setEditingId(null)}
                       />
                     ) : (
-                      <div className="group flex items-center gap-2 px-5 py-3">
-                        <button
-                          type="button"
-                          onClick={() => setEditingId(entry.id)}
-                          className="min-w-0 flex-1 flex items-center justify-between gap-2 text-left min-h-[48px] rounded-2xl hover:bg-[var(--color-card-soft)] transition-colors tap-bounce"
-                        >
-                          <div className="min-w-0 flex-1">
-                            <p className="text-[var(--color-text)] truncate">
-                              {displayName}
-                              {entry.quantity !== 1 && (
-                                <span className="text-[var(--color-text-muted)] ml-1">
-                                  ×{entry.quantity}
-                                </span>
-                              )}
-                            </p>
-                            <p className="text-xs text-[var(--color-text-muted)]">
-                              {cal} cal · {pro}g protein
-                            </p>
-                          </div>
-                          <Pencil className="w-4 h-4 text-[var(--color-text-muted)] shrink-0 opacity-0 group-hover:opacity-100" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onRemove(entry.id);
-                          }}
-                          className="p-2 rounded-2xl text-[var(--color-text-muted)] hover:text-[var(--color-danger)] hover:bg-[var(--color-card-soft)] min-h-[48px] min-w-[48px] flex items-center justify-center transition-colors tap-bounce"
-                          aria-label="Remove"
-                        >
-                          <Trash2 className="w-5 h-5" />
-                        </button>
-                      </div>
+                      <>
+                        <div className="group flex items-center gap-2 px-5 py-3">
+                          <button
+                            type="button"
+                            onClick={() => setPortionEntryId(entry.id)}
+                            className="tap-row min-w-0 flex-1 flex items-center justify-between gap-2 text-left min-h-[52px] rounded-2xl hover:bg-[var(--color-card-soft)] transition-colors"
+                          >
+                            <div className="min-w-0 flex-1">
+                              <p className="text-[var(--color-text)] truncate">
+                                {displayName}
+                                {portionSuffix && (
+                                  <span className="text-[var(--color-text-muted)]">
+                                    {portionSuffix}
+                                  </span>
+                                )}
+                              </p>
+                              <p className="text-xs text-[var(--color-text-muted)]">
+                                {cal} cal · {pro}g protein
+                              </p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                setPortionEntryId(null);
+                                setEditingId(entry.id);
+                              }}
+                              className="p-2 -m-2 rounded-xl shrink-0 opacity-0 group-hover:opacity-100 hover:bg-[var(--color-card-soft)] transition-opacity tap-bounce"
+                              aria-label="Edit entry"
+                            >
+                              <Pencil className="w-4 h-4 text-[var(--color-text-muted)]" />
+                            </button>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onRemove(entry.id);
+                            }}
+                            className="p-2 rounded-2xl text-[var(--color-text-muted)] hover:text-[var(--color-danger)] hover:bg-[var(--color-card-soft)] min-h-[48px] min-w-[48px] flex items-center justify-center transition-colors tap-bounce"
+                            aria-label="Remove"
+                          >
+                            <Trash2 className="w-5 h-5" />
+                          </button>
+                        </div>
+                        {showPortionSelector && (
+                          <PortionSelector
+                            currentQuantity={entry.quantity}
+                            onSelect={(quantity) => {
+                              onUpdateEntry(entry.id, { quantity });
+                              setPortionEntryId(null);
+                            }}
+                            onEdit={() => {
+                              setPortionEntryId(null);
+                              setEditingId(entry.id);
+                            }}
+                            onClose={() => setPortionEntryId(null)}
+                          />
+                        )}
+                      </>
                     )}
                   </li>
                 );
@@ -165,6 +212,58 @@ export function MealSection({
         </div>
       )}
     </section>
+  );
+}
+
+interface PortionSelectorProps {
+  currentQuantity: number;
+  onSelect: (quantity: number) => void;
+  onEdit: () => void;
+  onClose: () => void;
+}
+
+function PortionSelector({
+  currentQuantity,
+  onSelect,
+  onEdit,
+  onClose,
+}: PortionSelectorProps) {
+  return (
+    <div className="px-5 pb-3 pt-0 flex flex-col gap-2">
+      <p className="text-xs font-medium text-[var(--color-text-muted)]">Portion</p>
+      <div className="flex flex-wrap gap-2">
+        {PORTION_OPTIONS.map(({ value, label }) => (
+          <button
+            key={value}
+            type="button"
+            onClick={() => onSelect(value)}
+            className={`tap-row rounded-full px-4 py-2.5 font-semibold min-h-[44px] transition-all ${
+              currentQuantity === value
+                ? 'bg-[var(--color-accent)] text-white shadow-[var(--shadow-soft)]'
+                : 'bg-[var(--color-card-soft)] text-[var(--color-text)] shadow-[var(--shadow-card)]'
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+      <div className="flex gap-2 mt-1">
+        <button
+          type="button"
+          onClick={onEdit}
+          className="text-sm font-medium text-[var(--color-accent)] min-h-[44px] tap-bounce"
+        >
+          Edit details
+        </button>
+        <button
+          type="button"
+          onClick={onClose}
+          className="text-sm font-medium text-[var(--color-text-muted)] min-h-[44px] tap-bounce"
+        >
+          Done
+        </button>
+      </div>
+    </div>
   );
 }
 
