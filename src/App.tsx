@@ -160,12 +160,20 @@ function App() {
     return () => el.removeEventListener('touchmove', onTouchMove);
   }, []);
 
-  // Always scroll the newly active tab back to top
+  // Scroll the newly active tab to top (section + window for mobile)
   useEffect(() => {
-    const current = sectionsRef.current[tabIndex];
-    if (current) {
-      current.scrollTo({ top: 0, behavior: 'auto' });
-    }
+    const scrollToTop = () => {
+      const el = sectionsRef.current[tabIndex];
+      if (el) {
+        el.scrollTop = 0;
+        el.scrollTo(0, 0);
+      }
+      window.scrollTo(0, 0);
+    };
+    // Run immediately and again after slide transition (250ms) so it sticks on mobile
+    scrollToTop();
+    const t = setTimeout(scrollToTop, 300);
+    return () => clearTimeout(t);
   }, [tabIndex]);
 
   const slideStyle = {
@@ -189,19 +197,20 @@ function App() {
         >
           <section
             ref={(el) => { sectionsRef.current[0] = el; }}
-            className="shrink-0 overflow-y-auto"
-            style={{ width: `${100 / TABS.length}%` }}
+            className="shrink-0 overflow-y-auto overflow-x-hidden"
+            style={{ width: `${100 / TABS.length}%`, height: '100vh', maxHeight: '100vh' }}
             aria-label="Dashboard"
           >
             <Dashboard
               dailyLog={dailyLog}
               onAddFood={() => setAddFoodOpen(true)}
+              foods={foods}
             />
           </section>
           <section
             ref={(el) => { sectionsRef.current[1] = el; }}
-            className="shrink-0 overflow-y-auto"
-            style={{ width: `${100 / TABS.length}%` }}
+            className="shrink-0 overflow-y-auto overflow-x-hidden"
+            style={{ width: `${100 / TABS.length}%`, height: '100vh', maxHeight: '100vh' }}
             aria-label="Add food"
           >
             <div className="max-w-lg mx-auto px-4 py-8">
@@ -228,16 +237,16 @@ function App() {
           </section>
           <section
             ref={(el) => { sectionsRef.current[2] = el; }}
-            className="shrink-0 overflow-y-auto"
-            style={{ width: `${100 / TABS.length}%` }}
+            className="shrink-0 overflow-y-auto overflow-x-hidden"
+            style={{ width: `${100 / TABS.length}%`, height: '100vh', maxHeight: '100vh' }}
             aria-label="History"
           >
             <WeeklySummary />
           </section>
           <section
             ref={(el) => { sectionsRef.current[3] = el; }}
-            className="shrink-0 overflow-y-auto"
-            style={{ width: `${100 / TABS.length}%` }}
+            className="shrink-0 overflow-y-auto overflow-x-hidden"
+            style={{ width: `${100 / TABS.length}%`, height: '100vh', maxHeight: '100vh' }}
             aria-label="Settings"
           >
             <SettingsScreen />

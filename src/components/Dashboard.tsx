@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useDailyLog } from '../hooks/useDailyLog';
 import { useMacroTargets } from '../hooks/useMacroTargets';
-import { useFoodDatabase } from '../hooks/useFoodDatabase';
+import type { FoodItem } from '../lib/types';
 import { ProgressRing } from './ProgressRing';
 import { MealSection } from './MealSection';
 
@@ -18,13 +18,13 @@ const DAY_LABELS: Record<string, string> = {
 interface DashboardProps {
   dailyLog: ReturnType<typeof useDailyLog>;
   onAddFood: () => void;
+  foods: FoodItem[];
 }
 
-export function Dashboard({ dailyLog, onAddFood }: DashboardProps) {
+export function Dashboard({ dailyLog, onAddFood, foods }: DashboardProps) {
   const { log, setDayType, entries, totals, removeEntry, updateEntry, goToToday, date } =
     dailyLog;
   const { targets } = useMacroTargets();
-  const { foods } = useFoodDatabase();
 
   const dayLabel = useMemo(() => {
     if (!date) return '';
