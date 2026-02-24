@@ -9,7 +9,6 @@ import {
   PieChart,
   Pie,
   Cell,
-  Legend,
 } from 'recharts';
 import { useWeeklyData } from '../hooks/useWeeklyData';
 import { Flame, Target, TrendingUp } from 'lucide-react';
@@ -208,34 +207,41 @@ export function WeeklySummary() {
           <h2 className="text-sm font-medium text-[var(--color-text-muted)] mb-3">
             Macro split (week)
           </h2>
-          <div className="h-[200px] w-full">
+          <div className="h-[180px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={pieData}
                   cx="50%"
-                  cy="50%"
-                  innerRadius={50}
-                  outerRadius={72}
+                  cy="45%"
+                  innerRadius={48}
+                  outerRadius={68}
                   paddingAngle={2}
                   dataKey="value"
                   nameKey="name"
-                  label={({ name, value }) => `${name} ${Math.round(value)}%`}
-                  labelLine={{ stroke: AXIS_STROKE }}
+                  isAnimationActive
                 >
                   {pieData.map((entry) => (
                     <Cell key={entry.name} fill={entry.color} stroke="var(--color-card)" strokeWidth={2} />
                   ))}
                 </Pie>
-                <Legend
-                  verticalAlign="bottom"
-                  height={36}
-                  formatter={(value) => <span className="text-[var(--color-text-muted)] text-xs">{value}</span>}
-                  iconType="square"
-                  iconSize={10}
-                />
               </PieChart>
             </ResponsiveContainer>
+          </div>
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-1 mt-2">
+            {pieData.map((entry) => (
+              <span
+                key={entry.name}
+                className="inline-flex items-center gap-1.5 text-xs text-[var(--color-text-muted)]"
+              >
+                <span
+                  className="w-2.5 h-2.5 rounded-sm shrink-0"
+                  style={{ backgroundColor: entry.color }}
+                  aria-hidden
+                />
+                <span>{entry.name} {Math.round(entry.value)}%</span>
+              </span>
+            ))}
           </div>
         </section>
       )}
