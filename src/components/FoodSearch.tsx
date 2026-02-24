@@ -22,7 +22,8 @@ export function FoodSearch({ foods, onSelect, onClose }: FoodSearchProps) {
   );
 
   const handleSelect = useCallback(
-    (food: FoodItem) => {
+    (e: React.MouseEvent, food: FoodItem) => {
+      e.stopPropagation();
       onSelect(food, selectedQuantity);
       onClose?.();
     },
@@ -53,7 +54,7 @@ export function FoodSearch({ foods, onSelect, onClose }: FoodSearchProps) {
             key={q}
             type="button"
             onClick={() => setSelectedQuantity(q)}
-            className={`rounded-full px-4 py-2.5 font-semibold min-h-[44px] transition-all tap-bounce ${
+            className={`tap-row rounded-full px-4 py-2.5 font-semibold min-h-[44px] transition-all ${
               selectedQuantity === q
                 ? 'bg-[var(--color-accent)] text-white shadow-[var(--shadow-soft)]'
                 : 'bg-[var(--color-card)] text-[var(--color-text-muted)] shadow-[var(--shadow-card)]'
@@ -70,15 +71,16 @@ export function FoodSearch({ foods, onSelect, onClose }: FoodSearchProps) {
             {query.trim() ? 'No foods match your search.' : 'Type to search foods.'}
           </p>
         ) : (
-          <ul className="divide-y divide-[var(--color-card-soft)]">
+          <ul className="divide-y divide-[var(--color-card-soft)]" role="list">
             {results.map((food) => (
-              <li key={food.id}>
+              <li key={food.id} className="animate-pop-in">
                 <button
                   type="button"
-                  onClick={() => handleSelect(food)}
-                  className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left min-h-[48px] hover:bg-[var(--color-card-soft)] transition-colors rounded-xl tap-bounce animate-pop-in"
+                  onClick={(e) => handleSelect(e, food)}
+                  className="tap-row w-full flex items-center justify-between gap-3 px-4 py-4 text-left min-h-[56px] hover:bg-[var(--color-card-soft)] rounded-xl cursor-pointer"
+                  aria-label={`Add ${food.name} to today's log`}
                 >
-                  <span className="font-semibold text-[var(--color-text)] truncate">
+                  <span className="font-semibold text-[var(--color-text)] truncate flex-1 min-w-0">
                     {food.name}
                   </span>
                   <span className="text-sm text-[var(--color-text-muted)] shrink-0">

@@ -73,6 +73,32 @@ export function useDailyLog() {
     [log, persistLog]
   );
 
+  const toMealEntry = useCallback(
+    (entry: {
+      food_item_id: string | null;
+      custom_name: string | null;
+      calories: number;
+      protein: number;
+      carbs: number;
+      fat: number;
+      fiber?: number;
+      quantity?: number;
+    }): MealEntry => ({
+      id: generateId(),
+      meal_type: 'breakfast',
+      food_item_id: entry.food_item_id,
+      custom_name: entry.custom_name,
+      calories: entry.calories,
+      protein: entry.protein,
+      carbs: entry.carbs,
+      fat: entry.fat,
+      fiber: entry.fiber ?? 0,
+      quantity: entry.quantity ?? 1,
+      created_at: new Date().toISOString(),
+    }),
+    []
+  );
+
   const addEntry = useCallback(
     (
       entry: {
@@ -87,25 +113,35 @@ export function useDailyLog() {
       }
     ) => {
       if (!log) return;
-      const newEntry: MealEntry = {
-        id: generateId(),
-        meal_type: 'breakfast', // single day log; stored for schema compatibility
-        food_item_id: entry.food_item_id,
-        custom_name: entry.custom_name,
-        calories: entry.calories,
-        protein: entry.protein,
-        carbs: entry.carbs,
-        fat: entry.fat,
-        fiber: entry.fiber ?? 0,
-        quantity: entry.quantity ?? 1,
-        created_at: new Date().toISOString(),
-      };
       persistLog({
         ...log,
-        entries: [...log.entries, newEntry],
+        entries: [...log.entries, toMealEntry(entry)],
       });
     },
-    [log, persistLog]
+    [log, persistLog, toMealEntry]
+  );
+
+  const addEntries = useCallback(
+    (
+      entriesToAdd: Array<{
+        food_item_id: string | null;
+        custom_name: string | null;
+        calories: number;
+        protein: number;
+        carbs: number;
+        fat: number;
+        fiber?: number;
+        quantity?: number;
+      }>
+    ) => {
+      if (!log || entriesToAdd.length === 0) return;
+      const newEntries = entriesToAdd.map((e) => toMealEntry(e));
+      persistLog({
+        ...log,
+        entries: [...log.entries, ...newEntries],
+      });
+    },
+    [log, persistLog, toMealEntry]
   );
 
   const updateEntryQuantity = useCallback(
@@ -179,6 +215,7 @@ export function useDailyLog() {
     setDate,
     setDayType,
     addEntry,
+    addEntries,
     updateEntryQuantity,
     updateEntry,
     removeEntry,

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { flushSync } from 'react-dom';
 import { LayoutDashboard, PlusCircle, BarChart3, Settings } from 'lucide-react';
 import { Dashboard } from './components/Dashboard';
 import { AddFood } from './components/AddFood';
@@ -15,7 +16,7 @@ function App() {
   const [addFoodOpen, setAddFoodOpen] = useState(false);
 
   const dailyLog = useDailyLog();
-  const { addEntry } = dailyLog;
+  const { addEntry, addEntries } = dailyLog;
   const { foods, addFood } = useFoodDatabase();
 
   const handleFoodAdded = (
@@ -30,13 +31,15 @@ function App() {
       quantity?: number;
     }
   ) => {
-    addEntry(entry);
+    flushSync(() => {
+      addEntry(entry);
+    });
     setAddFoodOpen(false);
   };
 
   const handlePhotoScanConfirm = (items: EstimatedFood[], saveToDb: boolean) => {
-    items.forEach((item) => {
-      addEntry({
+    addEntries(
+      items.map((item) => ({
         food_item_id: null,
         custom_name: item.name.trim() || 'Unknown',
         calories: item.calories,
@@ -45,7 +48,9 @@ function App() {
         fat: item.fat,
         fiber: item.fiber,
         quantity: 1,
-      });
+      }))
+    );
+    items.forEach((item) => {
       if (saveToDb && item.name.trim()) {
         addFood({
           name: item.name.trim(),

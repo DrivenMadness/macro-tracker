@@ -44,6 +44,18 @@ button, a, [role="button"] {
   min-width: 44px;
 }
 
+/* Remove 300ms tap delay and improve touch responsiveness */
+button, a, [role="button"], .tap-target {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Clear active/pressed state for touch feedback */
+.tap-active:active {
+  opacity: 0.85;
+  background-color: var(--color-card-soft);
+}
+
 #root {
   min-height: 100vh;
   padding-bottom: 80px;
@@ -58,6 +70,17 @@ button, a, [role="button"] {
 
 .tap-bounce:active {
   animation: tap-bounce 0.2s ease;
+}
+
+/* Pressed state for list rows and large tap targets */
+.tap-row {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.1s ease, opacity 0.1s ease;
+}
+.tap-row:active {
+  background-color: var(--color-accent-soft);
+  opacity: 0.95;
 }
 
 /* Soft entrance when adding items */
