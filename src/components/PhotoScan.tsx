@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { ArrowLeft, Camera, Loader2, Check, ImagePlus } from 'lucide-react';
 import { analyzeFoodPhoto, getClaudeApiKey } from '../lib/claude';
+import { compressImageForApi } from '../lib/imageCompress';
 import type { EstimatedFood } from '../lib/types';
 
 type Step = 'capture' | 'analyzing' | 'edit' | 'error';
@@ -36,16 +37,15 @@ export function PhotoScan({ onBack, onConfirm }: PhotoScanProps) {
     setError('');
     setStep('analyzing');
 
-    const mediaType = file.type as 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp';
-    if (!ACCEPT.includes(mediaType)) {
+    if (!ACCEPT.includes(file.type)) {
       setError('Use JPEG, PNG, WebP, or GIF.');
       setStep('error');
       return;
     }
 
     try {
-      const base64 = await fileToBase64(file);
-      const items = await analyzeFoodPhoto(apiKey, base64, mediaType, description || undefined);
+      const { base64 } = await compressImageForApi(file);
+      const items = await analyzeFoodPhoto(apiKey, base64, 'image/jpeg', description || undefined);
       setEstimated(items.length > 0 ? items : [{ name: 'Unknown', calories: 0, protein: 0, carbs: 0, fat: 0 }]);
       setStep('edit');
     } catch (err) {
@@ -249,15 +249,3 @@ export function PhotoScan({ onBack, onConfirm }: PhotoScanProps) {
   );
 }
 
-function fileToBase64(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result as string;
-      const base64 = result.includes(',') ? result.split(',')[1] : result;
-      resolve(base64 ?? '');
-    };
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}

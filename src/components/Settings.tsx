@@ -21,31 +21,33 @@ export function Settings() {
         Settings
       </h1>
 
-      <section className="mb-8">
-        <h2 className="text-sm font-medium text-[var(--color-text-muted)] mb-2">
-          Claude API key (for photo scan)
-        </h2>
-        <p className="text-xs text-[var(--color-text-muted)] mb-2">
-          Stored only on this device. Get a key at console.anthropic.com.
-        </p>
-        <div className="flex gap-2">
-          <input
-            type="password"
-            value={apiKey}
-            onChange={(e) => setApiKey(e.target.value)}
-            placeholder="sk-ant-..."
-            className="flex-1 rounded-xl bg-[var(--color-card)] border border-white/10 px-4 py-3 text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] min-h-[44px]"
-            autoComplete="off"
-          />
-          <button
-            type="button"
-            onClick={handleSaveKey}
-            className="rounded-xl bg-[var(--color-accent)] text-[var(--color-bg)] font-medium px-4 py-3 min-h-[44px] shrink-0"
-          >
-            {saved ? 'Saved' : 'Save'}
-          </button>
-        </div>
-      </section>
+      {import.meta.env.DEV && (
+        <section className="mb-8">
+          <h2 className="text-sm font-medium text-[var(--color-text-muted)] mb-2">
+            Claude API key (for photo scan)
+          </h2>
+          <p className="text-xs text-[var(--color-text-muted)] mb-2">
+            Dev only. In production, the key is set on the server.
+          </p>
+          <div className="flex gap-2">
+            <input
+              type="password"
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+              placeholder="sk-ant-..."
+              className="flex-1 rounded-xl bg-[var(--color-card)] border border-white/10 px-4 py-3 text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] min-h-[44px]"
+              autoComplete="off"
+            />
+            <button
+              type="button"
+              onClick={handleSaveKey}
+              className="rounded-xl bg-[var(--color-accent)] text-[var(--color-bg)] font-medium px-4 py-3 min-h-[44px] shrink-0"
+            >
+              {saved ? 'Saved' : 'Save'}
+            </button>
+          </div>
+        </section>
+      )}
 
       <p className="text-[var(--color-text-muted)] text-sm">
         Edit targets and manage food database coming in a later update.
