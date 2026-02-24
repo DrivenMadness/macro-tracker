@@ -1,0 +1,25 @@
+{
+  "name": "MacroTracker",
+  "short_name": "MacroTracker",
+  "description": "Daily macro and calorie tracking",
+  "theme_color": "#0F0F0F",
+  "background_color": "#0F0F0F",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
