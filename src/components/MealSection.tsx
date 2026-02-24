@@ -130,7 +130,7 @@ export function MealSection({
                         <div className="group flex items-center gap-2 px-5 py-3">
                           <button
                             type="button"
-                            onClick={() => setPortionEntryId(entry.id)}
+                            onClick={() => setPortionEntryId((current) => (current === entry.id ? null : entry.id))}
                             className="tap-row min-w-0 flex-1 flex items-center justify-between gap-2 text-left min-h-[52px] rounded-2xl hover:bg-[var(--color-card-soft)] transition-colors"
                           >
                             <div className="min-w-0 flex-1">
