@@ -37,9 +37,9 @@ export function Settings() {
 
   return (
     <div className="max-w-lg mx-auto px-4 py-8 pb-24">
-      <h1 className="text-xl font-bold text-[var(--color-text)] mb-6">
+      <h2 className="text-xl font-bold text-[var(--color-text)] mb-6">
         Settings
-      </h1>
+      </h2>
 
       {/* Macro targets */}
       <section className="mb-8">

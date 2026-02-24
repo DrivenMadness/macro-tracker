@@ -87,6 +87,12 @@ function App() {
 
   return (
     <>
+      <header className="sticky top-0 z-30 bg-[var(--color-bg)]/95 backdrop-blur-sm border-b border-[var(--color-card-soft)] safe-area-pt">
+        <div className="max-w-lg mx-auto px-4 py-3 flex items-center gap-2">
+          <img src="/icons/chibi.svg" alt="" className="w-9 h-9 shrink-0" aria-hidden />
+          <h1 className="text-lg font-bold text-[var(--color-text)]">NutriBuddy</h1>
+        </div>
+      </header>
       <main className="min-h-screen">
         {tab === 'dashboard' && (
           <Dashboard
@@ -96,9 +102,9 @@ function App() {
         )}
         {tab === 'add' && (
           <div className="max-w-lg mx-auto px-4 py-8">
-            <h1 className="text-xl font-bold text-[var(--color-text)] mb-2">
+            <h2 className="text-xl font-bold text-[var(--color-text)] mb-2">
               Add food
-            </h1>
+            </h2>
             <p className="text-[var(--color-text-muted)] mb-4">
               Tap the button below to search and add food to today&apos;s log.
             </p>

@@ -42,9 +42,10 @@ export function AddFood({ onAdd, onPhotoScanConfirm, onManualAdd, onClose, foods
   return (
     <div className="fixed inset-0 z-50 bg-[var(--color-bg)] flex flex-col">
       <header className="flex items-center justify-between px-4 py-3 border-b border-[var(--color-card-soft)] shrink-0 bg-[var(--color-card)] shadow-[var(--shadow-card)]">
-        <h2 className="text-lg font-bold text-[var(--color-text)]">
-          Add food
-        </h2>
+        <div className="flex items-center gap-2">
+          <img src="/icons/chibi.svg" alt="" className="w-8 h-8 shrink-0" aria-hidden />
+          <h2 className="text-lg font-bold text-[var(--color-text)]">NutriBuddy · Add food</h2>
+        </div>
         <button
           type="button"
           onClick={onClose}

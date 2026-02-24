@@ -1,7 +1,7 @@
 {
-  "name": "MacroTracker",
-  "short_name": "MacroTracker",
-  "description": "Daily macro and calorie tracking",
+  "name": "NutriBuddy",
+  "short_name": "NutriBuddy",
+  "description": "Your friendly daily macro and calorie tracker",
   "theme_color": "#E8F4EC",
   "background_color": "#E8F4EC",
   "display": "standalone",
@@ -10,13 +10,13 @@
   "start_url": "/",
   "icons": [
     {
-      "src": "/icons/icon.svg",
+      "src": "/icons/chibi.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
     },
     {
-      "src": "/icons/icon.svg",
+      "src": "/icons/chibi.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "maskable"

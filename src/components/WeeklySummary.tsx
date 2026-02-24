@@ -58,9 +58,9 @@ export function WeeklySummary() {
 
   return (
     <div className="max-w-lg mx-auto px-4 pb-24">
-      <h1 className="text-xl font-bold text-[var(--color-text)] pt-4 pb-2">
+      <h2 className="text-xl font-bold text-[var(--color-text)] pt-4 pb-2">
         Summary
-      </h1>
+      </h2>
       <p className="text-sm text-[var(--color-text-muted)] mb-6">
         Past 7 days
       </p>
