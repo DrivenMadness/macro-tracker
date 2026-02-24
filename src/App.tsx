@@ -137,61 +137,62 @@ function App() {
       )}
 
       <nav
-        className="fixed bottom-0 left-0 right-0 bg-[var(--color-card)] shadow-[0_-4px 20px rgba(45,49,66,0.08)] safe-area-pb z-40"
+        className="fixed bottom-8 left-4 right-4 max-w-lg mx-auto rounded-3xl bg-[var(--color-card)] shadow-[0_-4px 20px rgba(45,49,66,0.08)] z-40"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom, 0)' }}
         role="navigation"
       >
-        <div className="max-w-lg mx-auto flex items-center justify-around h-16">
+        <div className="flex items-center justify-around h-20 px-2">
           <button
             type="button"
             onClick={() => setTab('dashboard')}
-            className={`flex flex-col items-center justify-center gap-0.5 flex-1 min-h-[48px] tap-bounce ${
+            className={`flex flex-col items-center justify-center gap-1 flex-1 min-h-[56px] tap-bounce ${
               tab === 'dashboard'
                 ? 'text-[var(--color-accent)]'
                 : 'text-[var(--color-text-muted)]'
             }`}
             aria-current={tab === 'dashboard' ? 'page' : undefined}
           >
-            <LayoutDashboard className="w-6 h-6" />
-            <span className="text-xs font-semibold">Dashboard</span>
+            <LayoutDashboard className="w-8 h-8" />
+            <span className="text-sm font-semibold">Dashboard</span>
           </button>
           <button
             type="button"
             onClick={() => setTab('add')}
-            className={`flex flex-col items-center justify-center gap-0.5 flex-1 min-h-[48px] tap-bounce ${
+            className={`flex flex-col items-center justify-center gap-1 flex-1 min-h-[56px] tap-bounce ${
               tab === 'add'
                 ? 'text-[var(--color-accent)]'
                 : 'text-[var(--color-text-muted)]'
             }`}
             aria-current={tab === 'add' ? 'page' : undefined}
           >
-            <PlusCircle className="w-6 h-6" />
-            <span className="text-xs font-semibold">Add</span>
+            <PlusCircle className="w-8 h-8" />
+            <span className="text-sm font-semibold">Add</span>
           </button>
           <button
             type="button"
             onClick={() => setTab('history')}
-            className={`flex flex-col items-center justify-center gap-0.5 flex-1 min-h-[48px] tap-bounce ${
+            className={`flex flex-col items-center justify-center gap-1 flex-1 min-h-[56px] tap-bounce ${
               tab === 'history'
                 ? 'text-[var(--color-accent)]'
                 : 'text-[var(--color-text-muted)]'
             }`}
             aria-current={tab === 'history' ? 'page' : undefined}
           >
-            <BarChart3 className="w-6 h-6" />
-            <span className="text-xs font-semibold">History</span>
+            <BarChart3 className="w-8 h-8" />
+            <span className="text-sm font-semibold">History</span>
           </button>
           <button
             type="button"
             onClick={() => setTab('settings')}
-            className={`flex flex-col items-center justify-center gap-0.5 flex-1 min-h-[48px] tap-bounce ${
+            className={`flex flex-col items-center justify-center gap-1 flex-1 min-h-[56px] tap-bounce ${
               tab === 'settings'
                 ? 'text-[var(--color-accent)]'
                 : 'text-[var(--color-text-muted)]'
             }`}
             aria-current={tab === 'settings' ? 'page' : undefined}
           >
-            <Settings className="w-6 h-6" />
-            <span className="text-xs font-semibold">Settings</span>
+            <Settings className="w-8 h-8" />
+            <span className="text-sm font-semibold">Settings</span>
           </button>
         </div>
       </nav>
