@@ -148,7 +148,7 @@ function App() {
   }, []);
 
   const slideStyle = {
-    transform: `translateX(calc(-${tabIndex * 100}% + ${dragPx}px))`,
+    transform: `translateX(calc(-${tabIndex * (100 / TABS.length)}% + ${dragPx}px))`,
     transition: isDragging ? 'none' : 'transform 0.25s ease-out',
   };
 
@@ -215,10 +215,11 @@ function App() {
       )}
 
       <nav
-        className="fixed bottom-0 left-0 right-0 bg-[var(--color-card)] shadow-[0_-4px 20px rgba(45,49,66,0.08)] z-40"
+        className="fixed bottom-0 left-0 right-0 bg-[var(--color-card)] shadow-[0_-4px 20px rgba(45,49,66,0.08)] z-40 min-h-[88px] flex flex-col justify-end"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom, 0)' }}
         role="navigation"
       >
-        <div className="max-w-lg mx-auto flex items-center justify-around h-20" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0)' }}>
+        <div className="max-w-lg mx-auto flex items-center justify-around w-full min-h-[88px] py-2">
           {(['dashboard', 'add', 'history', 'settings'] as const).map((t, i) => (
             <button
               key={t}
