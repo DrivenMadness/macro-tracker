@@ -19,7 +19,8 @@ export function PhotoScan({ onBack, onConfirm }: PhotoScanProps) {
   const [error, setError] = useState('');
   const [estimated, setEstimated] = useState<EstimatedFood[]>([]);
   const [saveToDb, setSaveToDb] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+  const libraryInputRef = useRef<HTMLInputElement>(null);
 
   const apiKey = getClaudeApiKey();
   const useProxy = import.meta.env.PROD;
@@ -218,17 +219,24 @@ export function PhotoScan({ onBack, onConfirm }: PhotoScanProps) {
         className="rounded-xl bg-[var(--color-card)] border border-white/10 px-4 py-3 text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] mb-4 resize-none min-h-[44px]"
       />
       <input
-        ref={fileInputRef}
+        ref={cameraInputRef}
         type="file"
-        accept={ACCEPT}
+        accept="image/*"
         capture="environment"
+        onChange={handleFile}
+        className="hidden"
+      />
+      <input
+        ref={libraryInputRef}
+        type="file"
+        accept="image/*"
         onChange={handleFile}
         className="hidden"
       />
       <div className="flex gap-2">
         <button
           type="button"
-          onClick={() => fileInputRef.current?.click()}
+          onClick={() => cameraInputRef.current?.click()}
           disabled={!canScan}
           className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-[var(--color-card)] border border-white/10 text-[var(--color-text)] px-4 py-4 min-h-[44px] disabled:opacity-50"
         >
@@ -237,7 +245,7 @@ export function PhotoScan({ onBack, onConfirm }: PhotoScanProps) {
         </button>
         <button
           type="button"
-          onClick={() => fileInputRef.current?.click()}
+          onClick={() => libraryInputRef.current?.click()}
           disabled={!canScan}
           className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-[var(--color-card)] border border-white/10 text-[var(--color-text)] px-4 py-4 min-h-[44px] disabled:opacity-50"
         >
