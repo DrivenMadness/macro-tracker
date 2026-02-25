@@ -54,7 +54,7 @@ export function AddFood({ initialMealType, onAdd, onPhotoScanConfirm, onManualAd
         <h2 className="text-lg font-bold text-[var(--color-text)]">Add food</h2>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1.5" aria-label="NutriBuddy">
-            <img src="/icons/MuscleHeart2.png" alt="" className="w-8 h-8 shrink-0" aria-hidden />
+            <img src="/icons/MuscleHeart2_transparent.png" alt="" className="w-8 h-8 shrink-0" aria-hidden />
             <span className="text-sm font-bold text-[var(--color-text)]">NutriBuddy</span>
           </div>
           <button
