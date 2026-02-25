@@ -94,43 +94,36 @@ function CalorieRing({
   );
 }
 
-function MacroBar({
+function MacroRow({
   label,
   value,
   target,
+  dotColor,
   gradientFrom,
   gradientTo,
 }: {
   label: string;
   value: number;
   target: number;
+  dotColor: string;
   gradientFrom: string;
   gradientTo: string;
 }) {
   const pct = target > 0 ? Math.min(value / target, 1.5) : 0;
   const displayValue = Math.round(value);
   const displayTarget = Math.round(target);
-  const displayPct = target > 0 ? Math.round((value / target) * 100) : 0;
 
   return (
-    <div className="flex flex-col gap-1.5 min-w-0 flex-1">
-      <div className="flex items-baseline justify-between gap-2 min-w-0">
-        <span className="text-xs font-medium text-[var(--color-text-muted)] shrink-0">
-          {label}
-        </span>
-        <span className="text-xs tabular-nums text-right">
-          <span className="font-semibold text-[var(--color-text)]">
-            {displayValue}
-          </span>
-          <span className="font-normal text-[var(--color-text-muted)]">
-            {' '}/ {displayTarget}g
-          </span>
-          <span className="font-normal text-[var(--color-text-muted)] ml-1">
-            {displayPct}%
-          </span>
-        </span>
-      </div>
-      <div className="h-2 rounded-full bg-[var(--color-card-soft)] overflow-hidden">
+    <div className="flex items-center gap-3 min-h-[40px]">
+      <div
+        className="w-2.5 h-2.5 rounded-full shrink-0"
+        style={{ backgroundColor: dotColor }}
+        aria-hidden
+      />
+      <span className="text-sm font-medium text-[var(--color-text)] w-14 shrink-0">
+        {label}
+      </span>
+      <div className="flex-1 min-w-0 h-1.5 rounded-full bg-[var(--color-card-soft)] overflow-hidden">
         <div
           className="macro-bar-fill h-full rounded-full"
           style={{
@@ -139,6 +132,9 @@ function MacroBar({
           }}
         />
       </div>
+      <span className="text-sm tabular-nums text-[var(--color-text)] shrink-0 font-medium">
+        {displayValue} / {displayTarget}g
+      </span>
     </div>
   );
 }
@@ -160,26 +156,29 @@ export function MacroHero({
         <CalorieRing value={calories} target={calorieTarget} />
       </div>
 
-      {/* Macro bars: protein, carbs, fat */}
-      <div className="flex gap-4">
-        <MacroBar
+      {/* Macro rows: protein, carbs, fat — vertical list */}
+      <div className="flex flex-col gap-5">
+        <MacroRow
           label="Protein"
           value={protein}
           target={proteinTarget}
+          dotColor="var(--color-protein)"
           gradientFrom="var(--color-protein)"
           gradientTo="rgba(107, 155, 209, 0.75)"
         />
-        <MacroBar
+        <MacroRow
           label="Carbs"
           value={carbs}
           target={carbsTarget}
+          dotColor="var(--color-carbs)"
           gradientFrom="var(--color-carbs)"
           gradientTo="rgba(232, 197, 71, 0.75)"
         />
-        <MacroBar
+        <MacroRow
           label="Fat"
           value={fat}
           target={fatTarget}
+          dotColor="var(--color-fat)"
           gradientFrom="var(--color-fat)"
           gradientTo="rgba(224, 160, 176, 0.75)"
         />
