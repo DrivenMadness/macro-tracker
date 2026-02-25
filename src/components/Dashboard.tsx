@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useDailyLog } from '../hooks/useDailyLog';
 import { useMacroTargets } from '../hooks/useMacroTargets';
 import type { FoodItem, MealType } from '../lib/types';
-import { ProgressRing } from './ProgressRing';
+import { MacroHero } from './MacroHero';
 import { MealSection } from './MealSection';
 
 const MEAL_SECTIONS: { type: MealType; title: string; emoji: string }[] = [
@@ -48,12 +48,6 @@ export function Dashboard({ dailyLog, onAddFood, foods }: DashboardProps) {
   if (!log) return null;
 
   const t = targets[log.day_type];
-  const calorieColor =
-    totals.calories <= t.calories * 0.9
-      ? 'text-[var(--color-accent)]'
-      : totals.calories <= t.calories
-        ? 'text-[var(--color-warning)]'
-        : 'text-[var(--color-danger)]';
 
   return (
     <div className="max-w-lg mx-auto px-4 pb-32">
@@ -100,35 +94,17 @@ export function Dashboard({ dailyLog, onAddFood, foods }: DashboardProps) {
           </button>
         </div>
 
-      {/* Circular progress rings */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-5">
-        <ProgressRing
-          value={totals.calories}
-          target={t.calories}
-          label="Calories"
-          unit="cal"
-          variant="calories"
-          colorClass={calorieColor}
-        />
-        <ProgressRing
-          value={totals.protein}
-          target={t.protein}
-          label="Protein"
-          colorClass="text-[var(--color-protein)]"
-        />
-        <ProgressRing
-          value={totals.carbs}
-          target={t.carbs}
-          label="Carbs"
-          colorClass="text-[var(--color-carbs)]"
-        />
-        <ProgressRing
-          value={totals.fat}
-          target={t.fat}
-          label="Fat"
-          colorClass="text-[var(--color-fat)]"
-        />
-      </div>
+      {/* Macro hero: calories ring + protein / carbs / fat bars */}
+      <MacroHero
+        calories={totals.calories}
+        calorieTarget={t.calories}
+        protein={totals.protein}
+        proteinTarget={t.protein}
+        carbs={totals.carbs}
+        carbsTarget={t.carbs}
+        fat={totals.fat}
+        fatTarget={t.fat}
+      />
 
       {/* Meal sections: Breakfast, Lunch, Snack, Dinner */}
       <div className="space-y-4">
