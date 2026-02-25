@@ -94,7 +94,7 @@ export function WeeklySummary() {
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={barData}
-              margin={{ top: 8, right: 8, left: -8, bottom: 0 }}
+              margin={{ top: 8, right: 8, left: 8, bottom: 0 }}
             >
               <CartesianGrid strokeDasharray="3 3" stroke={GRID_STROKE} vertical={false} />
               <XAxis
@@ -108,7 +108,7 @@ export function WeeklySummary() {
                 tick={{ fill: AXIS_STROKE, fontSize: 11 }}
                 axisLine={false}
                 tickLine={false}
-                width={32}
+                width={40}
                 tickFormatter={(v) => `${v}`}
               />
               <YAxis
