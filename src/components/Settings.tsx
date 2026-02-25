@@ -31,7 +31,7 @@ export function Settings() {
   const { targets, updateDayTypeTarget } = useMacroTargets();
   const { foods, updateFood, deleteFood } = useFoodDatabase();
   const { goalLbs, setGoalLbs } = useGoalWeight();
-  const { getProjectedDate, current7DayAvg, ratePerWeek } = useWeightLog();
+  const { getProjectedDate, ratePerWeek } = useWeightLog();
   const [editingFoodId, setEditingFoodId] = useState<string | null>(null);
   const [goalInput, setGoalInput] = useState(goalLbs != null ? String(goalLbs) : '');
 

@@ -73,7 +73,6 @@ function App() {
   const sectionsRef = useRef<(HTMLElement | null)[]>([]);
 
   const [addFoodOpen, setAddFoodOpen] = useState(false);
-  const [weightInput, setWeightInput] = useState('');
   const [weightSaved, setWeightSaved] = useState(false);
 
   const dailyLog = useDailyLog();

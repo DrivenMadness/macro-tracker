@@ -119,7 +119,7 @@ export function WeeklySummary() {
                     border: '1px solid rgba(255,255,255,0.1)',
                     borderRadius: '12px',
                   }}
-                  formatter={(value: number) => [`${value} lbs`, '']}
+                  formatter={(value: number | undefined) => [value != null ? `${value} lbs` : '', '']}
                   labelFormatter={(_, payload) =>
                     (payload?.[0]?.payload as { date?: string })?.date ?? ''
                   }
