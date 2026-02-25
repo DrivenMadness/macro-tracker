@@ -114,11 +114,11 @@ function MacroBar({
 
   return (
     <div className="flex flex-col gap-1.5 min-w-0 flex-1">
-      <div className="flex items-baseline justify-between gap-1">
-        <span className="text-xs font-medium text-[var(--color-text-muted)] truncate">
+      <div className="flex items-baseline justify-between gap-2 min-w-0">
+        <span className="text-xs font-medium text-[var(--color-text-muted)] shrink-0">
           {label}
         </span>
-        <span className="text-xs tabular-nums shrink-0">
+        <span className="text-xs tabular-nums text-right">
           <span className="font-semibold text-[var(--color-text)]">
             {displayValue}
           </span>
