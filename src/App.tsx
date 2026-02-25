@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { flushSync } from 'react-dom';
-import { LayoutDashboard, PlusCircle, BarChart3, Settings } from 'lucide-react';
+import { LayoutDashboard, PlusCircle, BarChart3, Settings, Scale, UtensilsCrossed } from 'lucide-react';
 import { Dashboard } from './components/Dashboard';
 import { AddFood } from './components/AddFood';
 import { WeeklySummary } from './components/WeeklySummary';
@@ -15,6 +15,13 @@ type Tab = 'dashboard' | 'add' | 'history' | 'settings';
 const TABS: Tab[] = ['dashboard', 'add', 'history', 'settings'];
 
 const SWIPE_THRESHOLD_PX = 50;
+
+function toLocalDateKey(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
 
 function LogWeightForm({
   initialLbs,
@@ -59,6 +66,85 @@ function LogWeightForm({
         {saved ? 'Saved' : 'Save'}
       </button>
     </form>
+  );
+}
+
+interface AddTabContentProps {
+  getWeightForDate: (date: string) => number | undefined;
+  logWeight: (date: string, lbs: number) => void;
+  weightSaved: boolean;
+  setWeightSaved: (v: boolean) => void;
+  onAddFood: () => void;
+}
+
+function AddTabContent({
+  getWeightForDate,
+  logWeight,
+  weightSaved,
+  setWeightSaved,
+  onAddFood,
+}: AddTabContentProps) {
+  const yesterdayKey = toLocalDateKey((() => { const d = new Date(); d.setDate(d.getDate() - 1); return d; })());
+  const todayKey = toLocalDateKey(new Date());
+
+  return (
+    <div className="max-w-lg mx-auto px-4 py-6">
+      <div className="flex items-center justify-between gap-3 mb-6">
+        <h2 className="text-xl font-bold text-[var(--color-text)]">Add</h2>
+        <div className="flex items-center gap-1.5 shrink-0" aria-label="NutriBuddy">
+          <img src="/icons/chibi.svg" alt="" className="w-8 h-8" aria-hidden />
+          <span className="text-sm font-bold text-[var(--color-text)]">NutriBuddy</span>
+        </div>
+      </div>
+
+      <p className="text-sm text-[var(--color-text-muted)] mb-4">
+        Log your weight or add food to today&apos;s log.
+      </p>
+
+      <div className="space-y-4">
+        <article className="rounded-3xl bg-[var(--color-card)] p-5 shadow-[var(--shadow-card)] border border-[var(--color-card-soft)]">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-11 h-11 rounded-2xl bg-[var(--color-accent-soft)] flex items-center justify-center shrink-0">
+              <Scale className="w-6 h-6 text-[var(--color-accent)]" aria-hidden />
+            </div>
+            <div>
+              <h3 className="font-semibold text-[var(--color-text)]">Log weight</h3>
+              <p className="text-xs text-[var(--color-text-muted)]">Quick daily check-in</p>
+            </div>
+          </div>
+          <LogWeightForm
+            key={todayKey}
+            initialLbs={getWeightForDate(yesterdayKey)}
+            onSave={(lbs) => {
+              logWeight(todayKey, lbs);
+              setWeightSaved(true);
+              setTimeout(() => setWeightSaved(false), 2000);
+            }}
+            saved={weightSaved}
+          />
+        </article>
+
+        <article className="rounded-3xl bg-[var(--color-card)] p-5 shadow-[var(--shadow-card)] border border-[var(--color-card-soft)]">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-11 h-11 rounded-2xl bg-[var(--color-accent-soft)] flex items-center justify-center shrink-0">
+              <UtensilsCrossed className="w-6 h-6 text-[var(--color-accent)]" aria-hidden />
+            </div>
+            <div>
+              <h3 className="font-semibold text-[var(--color-text)]">Log food</h3>
+              <p className="text-xs text-[var(--color-text-muted)]">Search or add manually</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={onAddFood}
+            className="w-full rounded-2xl bg-[var(--color-accent)] text-white font-semibold py-3.5 min-h-[52px] shadow-[var(--shadow-soft)] tap-bounce flex items-center justify-center gap-2"
+          >
+            <PlusCircle className="w-5 h-5" />
+            Add food to today
+          </button>
+        </article>
+      </div>
+    </div>
   );
 }
 
@@ -173,8 +259,10 @@ function App() {
     const deltaX = x - touchStart.current.x;
     const deltaY = y - touchStart.current.y;
 
-    if (!swipeLock.current && (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10)) {
-      swipeLock.current = Math.abs(deltaX) > Math.abs(deltaY);
+    // Only lock to horizontal swipe when movement is clearly horizontal (avoids stealing vertical scroll)
+    if (!swipeLock.current && (Math.abs(deltaX) > 12 || Math.abs(deltaY) > 12)) {
+      const clearlyHorizontal = Math.abs(deltaX) > 20 && Math.abs(deltaX) > 1.8 * Math.abs(deltaY);
+      swipeLock.current = clearlyHorizontal;
     }
     if (!swipeLock.current) return;
 
@@ -252,6 +340,7 @@ function App() {
               height: 'calc(100vh - 96px)',
               maxHeight: 'calc(100vh - 96px)',
               WebkitOverflowScrolling: 'touch',
+              touchAction: 'pan-y',
             }}
             aria-label="Dashboard"
           >
@@ -269,53 +358,17 @@ function App() {
               height: 'calc(100vh - 96px)',
               maxHeight: 'calc(100vh - 96px)',
               WebkitOverflowScrolling: 'touch',
+              touchAction: 'pan-y',
             }}
-            aria-label="Add food"
+            aria-label="Add"
           >
-            <div className="max-w-lg mx-auto px-4 py-8">
-              <div className="flex items-start justify-between gap-3 mb-2">
-                <div>
-                  <h2 className="text-xl font-bold text-[var(--color-text)]">Add</h2>
-                </div>
-                <div className="flex items-center gap-1.5 shrink-0" aria-label="NutriBuddy">
-                  <img src="/icons/chibi.svg" alt="" className="w-8 h-8" aria-hidden />
-                  <span className="text-sm font-bold text-[var(--color-text)]">NutriBuddy</span>
-                </div>
-              </div>
-
-              {/* Log Weight */}
-              <section className="rounded-3xl bg-[var(--color-card)] p-4 mb-6 shadow-[var(--shadow-card)]">
-                <h2 className="text-sm font-medium text-[var(--color-text-muted)] mb-3">Log weight</h2>
-                <LogWeightForm
-                  key={new Date().toISOString().slice(0, 10)}
-                  initialLbs={getWeightForDate(
-                    (() => {
-                      const d = new Date();
-                      d.setDate(d.getDate() - 1);
-                      return d.toISOString().slice(0, 10);
-                    })()
-                  )}
-                  onSave={(lbs) => {
-                    const today = new Date().toISOString().slice(0, 10);
-                    logWeight(today, lbs);
-                    setWeightSaved(true);
-                    setTimeout(() => setWeightSaved(false), 2000);
-                  }}
-                  saved={weightSaved}
-                />
-              </section>
-
-              <p className="text-[var(--color-text-muted)] mb-4">
-                Tap the button below to search and add food to today&apos;s log.
-              </p>
-              <button
-                type="button"
-                onClick={() => setAddFoodOpen(true)}
-                className="rounded-full bg-[var(--color-accent)] text-white px-5 py-3 font-semibold min-h-[48px] shadow-[var(--shadow-soft)] tap-bounce"
-              >
-                Add food
-              </button>
-            </div>
+            <AddTabContent
+              getWeightForDate={getWeightForDate}
+              logWeight={logWeight}
+              weightSaved={weightSaved}
+              setWeightSaved={setWeightSaved}
+              onAddFood={() => setAddFoodOpen(true)}
+            />
           </section>
           <section
             ref={(el) => { sectionsRef.current[2] = el; }}
@@ -325,6 +378,7 @@ function App() {
               height: 'calc(100vh - 96px)',
               maxHeight: 'calc(100vh - 96px)',
               WebkitOverflowScrolling: 'touch',
+              touchAction: 'pan-y',
             }}
             aria-label="History"
           >
@@ -338,6 +392,7 @@ function App() {
               height: 'calc(100vh - 96px)',
               maxHeight: 'calc(100vh - 96px)',
               WebkitOverflowScrolling: 'touch',
+              touchAction: 'pan-y',
             }}
             aria-label="Settings"
           >
