@@ -230,7 +230,6 @@ export function SearchFood({ onBack, onConfirm }: SearchFoodProps) {
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
           placeholder="e.g. medium avocado, 2 eggs and toast"
           className="flex-1 rounded-2xl bg-[var(--color-card)] shadow-[var(--shadow-card)] px-4 py-3 text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] min-h-[48px] border-0"
-          autoFocus
         />
         <button
           type="button"

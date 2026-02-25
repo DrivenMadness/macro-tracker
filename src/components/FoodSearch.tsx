@@ -40,7 +40,6 @@ export function FoodSearch({ foods, onSelect, onClose }: FoodSearchProps) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="flex-1 bg-transparent text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] outline-none min-h-[44px]"
-          autoFocus
           autoComplete="off"
         />
       </div>

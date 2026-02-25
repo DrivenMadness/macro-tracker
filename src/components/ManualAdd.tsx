@@ -50,7 +50,6 @@ export function ManualAdd({ onBack, onSubmit }: ManualAddProps) {
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g. Grilled chicken breast"
             className="block w-full rounded-2xl bg-[var(--color-card)] shadow-[var(--shadow-card)] px-4 py-3 text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] mt-1 min-h-[48px] border-0"
-            autoFocus
           />
         </label>
 
