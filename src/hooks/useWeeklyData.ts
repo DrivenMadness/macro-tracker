@@ -14,13 +14,20 @@ function loadLogForDate(date: string): DailyLog | null {
   return null;
 }
 
+function toLocalDateKey(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
 function getPast7DayKeys(): string[] {
   const keys: string[] = [];
   const today = new Date();
   for (let i = 6; i >= 0; i--) {
     const d = new Date(today);
     d.setDate(d.getDate() - i);
-    keys.push(d.toISOString().slice(0, 10));
+    keys.push(toLocalDateKey(d));
   }
   return keys;
 }
