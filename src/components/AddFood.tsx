@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { X, Camera, Edit3 } from 'lucide-react';
+import { X, Camera, Edit3, Search } from 'lucide-react';
 import { FoodSearch } from './FoodSearch';
 import { PhotoScan } from './PhotoScan';
 import { ManualAdd } from './ManualAdd';
+import { SearchFood } from './SearchFood';
 import type { FoodItem, MealType } from '../lib/types';
 import type { EstimatedFood } from '../lib/types';
 
@@ -28,7 +29,7 @@ interface AddFoodProps {
 }
 
 export function AddFood({ initialMealType, onAdd, onPhotoScanConfirm, onManualAdd, onClose, foods }: AddFoodProps) {
-  const [view, setView] = useState<'search' | 'photo' | 'manual'>('search');
+  const [view, setView] = useState<'search' | 'photo' | 'manual' | 'searchFood'>('search');
   const mealType = initialMealType ?? 'breakfast';
 
   const handleSelect = (food: FoodItem, quantity: number) => {
@@ -73,6 +74,14 @@ export function AddFood({ initialMealType, onAdd, onPhotoScanConfirm, onManualAd
             <div className="flex gap-2 mb-4">
               <button
                 type="button"
+                onClick={() => setView('searchFood')}
+                className="flex-1 flex items-center justify-center gap-2 rounded-full bg-[var(--color-card)] shadow-[var(--shadow-card)] text-[var(--color-text)] px-4 py-3 min-h-[48px] tap-bounce"
+              >
+                <Search className="w-5 h-5" />
+                Search Food
+              </button>
+              <button
+                type="button"
                 onClick={() => setView('photo')}
                 className="flex-1 flex items-center justify-center gap-2 rounded-full bg-[var(--color-card)] shadow-[var(--shadow-card)] text-[var(--color-text)] px-4 py-3 min-h-[48px] tap-bounce"
               >
@@ -105,6 +114,12 @@ export function AddFood({ initialMealType, onAdd, onPhotoScanConfirm, onManualAd
           <ManualAdd
             onBack={() => setView('search')}
             onSubmit={onManualAdd}
+          />
+        )}
+        {view === 'searchFood' && (
+          <SearchFood
+            onBack={() => setView('search')}
+            onConfirm={onPhotoScanConfirm}
           />
         )}
       </div>

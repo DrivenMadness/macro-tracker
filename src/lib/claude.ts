@@ -116,3 +116,85 @@ export async function analyzeFoodPhoto(
     } satisfies EstimatedFood;
   });
 }
+
+const ESTIMATE_PROMPT_PREFIX = `Estimate the macros for this food: `;
+const ESTIMATE_PROMPT_SUFFIX = `
+
+Return a JSON array of items with name, calories, protein, carbs, fat, fiber. If the description includes multiple items, break them out separately. Be conservative with estimates.
+Return ONLY a valid JSON array, no other text. Example format:
+[{"name": "Grilled chicken breast", "calories": 165, "protein": 31, "carbs": 0, "fat": 4, "fiber": 0}]`;
+
+/**
+ * Send a text description to Claude and return estimated foods (no image).
+ * Reuses the same proxy and JSON parsing as photo analysis.
+ */
+export async function estimateFoodFromDescription(
+  apiKey: string,
+  description: string
+): Promise<EstimatedFood[]> {
+  const text =
+    ESTIMATE_PROMPT_PREFIX + description.trim() + ESTIMATE_PROMPT_SUFFIX;
+
+  const isDev = import.meta.env.DEV;
+  const apiUrl = isDev
+    ? '/api/anthropic/v1/messages'
+    : '/api/anthropic-messages';
+
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...(isDev && { 'anthropic-dangerous-direct-browser-access': 'true' }),
+  };
+  if (isDev) {
+    headers['x-api-key'] = apiKey;
+    headers['anthropic-version'] = '2023-06-01';
+  }
+
+  const response = await fetch(apiUrl, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1024,
+      messages: [{ role: 'user', content: [{ type: 'text', text }] }],
+    }),
+  });
+
+  if (!response.ok) {
+    const err = (await response.json().catch(() => ({}))) as {
+      error?: { message?: string };
+    };
+    throw new Error(err?.error?.message ?? `API error: ${response.status}`);
+  }
+
+  const data = (await response.json()) as {
+    content?: Array<{ type: string; text?: string }>;
+  };
+  const responseText = data.content?.find((b) => b.type === 'text')?.text?.trim();
+  if (!responseText) throw new Error('No response from Claude');
+
+  let jsonStr: string;
+  const codeMatch = responseText.match(/```(?:json)?\s*([\s\S]*?)```/);
+  if (codeMatch) {
+    jsonStr = codeMatch[1].trim();
+  } else {
+    const start = responseText.indexOf('[');
+    const lastBracket = responseText.lastIndexOf(']');
+    if (start === -1 || lastBracket === -1 || lastBracket <= start)
+      throw new Error('No JSON array found in response');
+    jsonStr = responseText.slice(start, lastBracket + 1);
+  }
+  const raw = JSON.parse(jsonStr) as unknown;
+  if (!Array.isArray(raw)) throw new Error('Response was not a JSON array');
+
+  return raw.map((item) => {
+    const o = item as Record<string, unknown>;
+    return {
+      name: String(o.name ?? 'Unknown'),
+      calories: Number(o.calories) || 0,
+      protein: Number(o.protein) || 0,
+      carbs: Number(o.carbs) || 0,
+      fat: Number(o.fat) || 0,
+      fiber: typeof o.fiber === 'number' ? o.fiber : undefined,
+    } satisfies EstimatedFood;
+  });
+}
