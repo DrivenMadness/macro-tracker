@@ -119,6 +119,7 @@ export function MealSection({
               </button>
             </div>
           ) : (
+            <>
             <ul className="divide-y divide-[var(--color-card-soft)]">
               {entries.map((entry) => {
                 const food = entry.food_item_id ? foodById(entry.food_item_id) : null;
@@ -212,20 +213,20 @@ export function MealSection({
                 );
               })}
             </ul>
-
-          <div className="px-5 py-3 flex items-center justify-between border-t border-[var(--color-card-soft)] bg-[var(--color-card-soft)]">
-            <span className="text-sm font-medium text-[var(--color-text-muted)]">
-              Subtotal: {subtotal.calories} cal, {subtotal.protein}g protein
-            </span>
-            <button
-              type="button"
-              onClick={handleAdd}
-              className="flex items-center justify-center gap-1 rounded-full border-2 border-[var(--color-accent)] text-[var(--color-accent)] font-semibold px-4 py-2 min-h-[44px] tap-bounce"
-            >
-              <Plus className="w-4 h-4" />
-              Add
-            </button>
-          </div>
+            <div className="px-5 py-3 flex items-center justify-between border-t border-[var(--color-card-soft)] bg-[var(--color-card-soft)]">
+              <span className="text-sm font-medium text-[var(--color-text-muted)]">
+                Subtotal: {subtotal.calories} cal, {subtotal.protein}g protein
+              </span>
+              <button
+                type="button"
+                onClick={handleAdd}
+                className="flex items-center justify-center gap-1 rounded-full border-2 border-[var(--color-accent)] text-[var(--color-accent)] font-semibold px-4 py-2 min-h-[44px] tap-bounce"
+              >
+                <Plus className="w-4 h-4" />
+                Add
+              </button>
+            </div>
+            </>
           )}
         </div>
       )}
