@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { getClaudeApiKey, setClaudeApiKey } from '../lib/claude';
 import { useMacroTargets } from '../hooks/useMacroTargets';
 import { useFoodDatabase } from '../hooks/useFoodDatabase';
+import { useGoalWeight } from '../hooks/useGoalWeight';
+import { useWeightLog } from '../hooks/useWeightLog';
 import type { DayType } from '../lib/types';
 import type { FoodItem } from '../lib/types';
 
@@ -17,17 +19,31 @@ const FIELDS: { key: keyof import('../lib/types').DayTarget; label: string; unit
   { key: 'fat', label: 'Fat', unit: 'g' },
 ];
 
+function formatProjectedDate(isoDate: string): string {
+  const d = new Date(isoDate + 'T12:00:00');
+  return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
 export function Settings() {
   const [apiKey, setApiKey] = useState('');
   const [saved, setSaved] = useState(false);
 
   const { targets, updateDayTypeTarget } = useMacroTargets();
   const { foods, updateFood, deleteFood } = useFoodDatabase();
+  const { goalLbs, setGoalLbs } = useGoalWeight();
+  const { getProjectedDate, current7DayAvg, ratePerWeek } = useWeightLog();
   const [editingFoodId, setEditingFoodId] = useState<string | null>(null);
+  const [goalInput, setGoalInput] = useState(goalLbs != null ? String(goalLbs) : '');
 
   useEffect(() => {
     setApiKey(getClaudeApiKey());
   }, []);
+
+  useEffect(() => {
+    setGoalInput(goalLbs != null ? String(goalLbs) : '');
+  }, [goalLbs]);
+
+  const projectedIso = goalLbs != null ? getProjectedDate(goalLbs) : null;
 
   const handleSaveKey = () => {
     setClaudeApiKey(apiKey);
@@ -44,6 +60,45 @@ export function Settings() {
           <span className="text-sm font-bold text-[var(--color-text)]">NutriBuddy</span>
         </div>
       </div>
+
+      {/* Goal weight */}
+      <section className="mb-8">
+        <h2 className="text-sm font-semibold text-[var(--color-text-muted)] mb-3">
+          Goal weight
+        </h2>
+        <p className="text-xs text-[var(--color-text-muted)] mb-3">
+          Set a target weight to see a projected date based on your current trend.
+        </p>
+        <div className="flex flex-wrap items-end gap-2">
+          <label className="flex-1 min-w-[80px]">
+            <span className="sr-only">Goal weight (lbs)</span>
+            <input
+              type="number"
+              min={50}
+              max={999}
+              step={0.5}
+              placeholder="lbs"
+              value={goalInput}
+              onChange={(e) => setGoalInput(e.target.value)}
+              onBlur={() => {
+                const n = Number(goalInput);
+                if (goalInput.trim() === '') setGoalLbs(null);
+                else if (Number.isFinite(n) && n > 0) setGoalLbs(n);
+              }}
+              className="w-full rounded-2xl bg-[var(--color-card)] shadow-[var(--shadow-card)] px-4 py-3 text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] min-h-[48px] border-0"
+            />
+          </label>
+          <span className="text-sm text-[var(--color-text-muted)] pb-2">lbs</span>
+        </div>
+        {projectedIso != null && ratePerWeek != null && ratePerWeek < 0 && (
+          <p className="text-sm text-[var(--color-text-muted)] mt-2">
+            At current rate (~{ratePerWeek} lbs/week), projected:{' '}
+            <span className="font-medium text-[var(--color-text)]">
+              {formatProjectedDate(projectedIso)}
+            </span>
+          </p>
+        )}
+      </section>
 
       {/* Macro targets */}
       <section className="mb-8">

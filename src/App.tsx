@@ -7,6 +7,7 @@ import { WeeklySummary } from './components/WeeklySummary';
 import { Settings as SettingsScreen } from './components/Settings';
 import { useDailyLog } from './hooks/useDailyLog';
 import { useFoodDatabase } from './hooks/useFoodDatabase';
+import { useWeightLog } from './hooks/useWeightLog';
 import type { EstimatedFood } from './lib/types';
 
 type Tab = 'dashboard' | 'add' | 'history' | 'settings';
@@ -14,6 +15,52 @@ type Tab = 'dashboard' | 'add' | 'history' | 'settings';
 const TABS: Tab[] = ['dashboard', 'add', 'history', 'settings'];
 
 const SWIPE_THRESHOLD_PX = 50;
+
+function LogWeightForm({
+  initialLbs,
+  onSave,
+  saved,
+}: {
+  initialLbs: number | undefined;
+  onSave: (lbs: number) => void;
+  saved: boolean;
+}) {
+  const [value, setValue] = useState(initialLbs != null ? String(initialLbs) : '');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const n = Number(value);
+    if (Number.isFinite(n) && n > 0) {
+      onSave(n);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="flex flex-wrap items-end gap-2">
+      <label className="flex-1 min-w-[100px]">
+        <span className="sr-only">Weight (lbs)</span>
+        <input
+          type="number"
+          inputMode="decimal"
+          min={50}
+          max={999}
+          step={0.1}
+          placeholder="lbs"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          className="w-full rounded-2xl bg-[var(--color-bg)] px-4 py-3 text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] min-h-[48px] border-0 shadow-[var(--shadow-card)]"
+        />
+      </label>
+      <button
+        type="submit"
+        disabled={saved || !value.trim()}
+        className="rounded-full bg-[var(--color-accent)] text-white font-semibold px-5 py-3 min-h-[48px] tap-bounce disabled:opacity-70"
+      >
+        {saved ? 'Saved' : 'Save'}
+      </button>
+    </form>
+  );
+}
 
 function App() {
   const [tabIndex, setTabIndex] = useState(0);
@@ -26,10 +73,13 @@ function App() {
   const sectionsRef = useRef<(HTMLElement | null)[]>([]);
 
   const [addFoodOpen, setAddFoodOpen] = useState(false);
+  const [weightInput, setWeightInput] = useState('');
+  const [weightSaved, setWeightSaved] = useState(false);
 
   const dailyLog = useDailyLog();
   const { addEntry, addEntries } = dailyLog;
   const { foods, addFood } = useFoodDatabase();
+  const { logWeight, getWeightForDate } = useWeightLog();
 
   const handleFoodAdded = (
     entry: {
@@ -226,13 +276,36 @@ function App() {
             <div className="max-w-lg mx-auto px-4 py-8">
               <div className="flex items-start justify-between gap-3 mb-2">
                 <div>
-                  <h2 className="text-xl font-bold text-[var(--color-text)]">Add food</h2>
+                  <h2 className="text-xl font-bold text-[var(--color-text)]">Add</h2>
                 </div>
                 <div className="flex items-center gap-1.5 shrink-0" aria-label="NutriBuddy">
                   <img src="/icons/chibi.svg" alt="" className="w-8 h-8" aria-hidden />
                   <span className="text-sm font-bold text-[var(--color-text)]">NutriBuddy</span>
                 </div>
               </div>
+
+              {/* Log Weight */}
+              <section className="rounded-3xl bg-[var(--color-card)] p-4 mb-6 shadow-[var(--shadow-card)]">
+                <h2 className="text-sm font-medium text-[var(--color-text-muted)] mb-3">Log weight</h2>
+                <LogWeightForm
+                  key={new Date().toISOString().slice(0, 10)}
+                  initialLbs={getWeightForDate(
+                    (() => {
+                      const d = new Date();
+                      d.setDate(d.getDate() - 1);
+                      return d.toISOString().slice(0, 10);
+                    })()
+                  )}
+                  onSave={(lbs) => {
+                    const today = new Date().toISOString().slice(0, 10);
+                    logWeight(today, lbs);
+                    setWeightSaved(true);
+                    setTimeout(() => setWeightSaved(false), 2000);
+                  }}
+                  saved={weightSaved}
+                />
+              </section>
+
               <p className="text-[var(--color-text-muted)] mb-4">
                 Tap the button below to search and add food to today&apos;s log.
               </p>
