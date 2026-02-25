@@ -56,7 +56,7 @@ export function Dashboard({ dailyLog, onAddFood, foods }: DashboardProps) {
         : 'text-[var(--color-danger)]';
 
   return (
-    <div className="max-w-lg mx-auto px-4 pb-24">
+    <div className="max-w-lg mx-auto px-4 pb-32">
       {/* Date + Day type toggle */}
       <div className="py-5 flex items-start justify-between gap-3">
         <button
