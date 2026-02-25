@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, Camera, Edit3, Search } from 'lucide-react';
+import { X, Camera, Edit3, Globe } from 'lucide-react';
 import { FoodSearch } from './FoodSearch';
 import { PhotoScan } from './PhotoScan';
 import { ManualAdd } from './ManualAdd';
@@ -71,30 +71,45 @@ export function AddFood({ initialMealType, onAdd, onPhotoScanConfirm, onManualAd
       <div className="flex-1 overflow-auto px-4 py-4">
         {view === 'search' && (
           <>
-            <div className="flex gap-2 mb-4">
+            <div className="space-y-3 mb-6">
               <button
                 type="button"
                 onClick={() => setView('searchFood')}
-                className="flex-1 flex items-center justify-center gap-2 rounded-full bg-[var(--color-card)] shadow-[var(--shadow-card)] text-[var(--color-text)] px-4 py-3 min-h-[48px] tap-bounce"
+                className="w-full flex items-center gap-4 rounded-2xl bg-[var(--color-card)] shadow-[var(--shadow-card)] border border-[var(--color-card-soft)] p-4 text-left tap-bounce hover:bg-[var(--color-card-soft)] transition-colors"
               >
-                <Search className="w-5 h-5" />
-                Search Food
+                <div className="w-12 h-12 rounded-xl bg-[var(--color-accent-soft)] flex items-center justify-center shrink-0">
+                  <Globe className="w-6 h-6 text-[var(--color-accent)]" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="font-semibold text-[var(--color-text)]">Web Search</p>
+                  <p className="text-sm text-[var(--color-text-muted)]">Describe food, get macro estimates</p>
+                </div>
               </button>
               <button
                 type="button"
                 onClick={() => setView('photo')}
-                className="flex-1 flex items-center justify-center gap-2 rounded-full bg-[var(--color-card)] shadow-[var(--shadow-card)] text-[var(--color-text)] px-4 py-3 min-h-[48px] tap-bounce"
+                className="w-full flex items-center gap-4 rounded-2xl bg-[var(--color-card)] shadow-[var(--shadow-card)] border border-[var(--color-card-soft)] p-4 text-left tap-bounce hover:bg-[var(--color-card-soft)] transition-colors"
               >
-                <Camera className="w-5 h-5" />
-                Scan photo
+                <div className="w-12 h-12 rounded-xl bg-[var(--color-accent-soft)] flex items-center justify-center shrink-0">
+                  <Camera className="w-6 h-6 text-[var(--color-accent)]" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="font-semibold text-[var(--color-text)]">Scan photo</p>
+                  <p className="text-sm text-[var(--color-text-muted)]">Take or upload a photo of your meal</p>
+                </div>
               </button>
               <button
                 type="button"
                 onClick={() => setView('manual')}
-                className="flex-1 flex items-center justify-center gap-2 rounded-full bg-[var(--color-card)] shadow-[var(--shadow-card)] text-[var(--color-text)] px-4 py-3 min-h-[48px] tap-bounce"
+                className="w-full flex items-center gap-4 rounded-2xl bg-[var(--color-card)] shadow-[var(--shadow-card)] border border-[var(--color-card-soft)] p-4 text-left tap-bounce hover:bg-[var(--color-card-soft)] transition-colors"
               >
-                <Edit3 className="w-5 h-5" />
-                Manual Add
+                <div className="w-12 h-12 rounded-xl bg-[var(--color-accent-soft)] flex items-center justify-center shrink-0">
+                  <Edit3 className="w-6 h-6 text-[var(--color-accent)]" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="font-semibold text-[var(--color-text)]">Manual Add</p>
+                  <p className="text-sm text-[var(--color-text-muted)]">Enter name and macros yourself</p>
+                </div>
               </button>
             </div>
             <FoodSearch

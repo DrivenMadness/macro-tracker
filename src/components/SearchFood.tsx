@@ -216,11 +216,11 @@ export function SearchFood({ onBack, onConfirm }: SearchFoodProps) {
       </button>
       {!canSearch && (
         <p className="text-sm text-[var(--color-warning)] mb-3">
-          Add your Claude API key in Settings to use Search Food.
+          Add your Claude API key in Settings to use Web Search.
         </p>
       )}
       <label className="text-sm font-medium text-[var(--color-text-muted)] mb-1 block">
-        Search Food
+        Web Search
       </label>
       <div className="flex gap-2 mb-4">
         <input
