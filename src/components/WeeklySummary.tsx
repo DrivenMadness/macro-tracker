@@ -85,142 +85,140 @@ export function WeeklySummary() {
       </div>
       <div className="mb-6" />
 
-      {/* Weight trend (30 days) */}
-      {last30.some((d) => d.weight != null) && (
-        <section className="rounded-3xl bg-[var(--color-card)] p-4 mb-4 shadow-[var(--shadow-card)]">
-          <h2 className="text-sm font-medium text-[var(--color-text-muted)] mb-3">
-            Weight trend (30 days)
-          </h2>
-          <div className="h-[200px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                data={last30}
-                margin={{ top: 8, right: 8, left: -8, bottom: 0 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" stroke={GRID_STROKE} vertical={false} />
-                <XAxis
-                  dataKey="label"
-                  tick={{ fill: AXIS_STROKE, fontSize: 10 }}
-                  axisLine={{ stroke: GRID_STROKE }}
-                  tickLine={false}
-                  interval="preserveStartEnd"
-                />
-                <YAxis
-                  tick={{ fill: AXIS_STROKE, fontSize: 11 }}
-                  axisLine={false}
-                  tickLine={false}
-                  width={36}
-                  tickFormatter={(v) => `${v}`}
-                  domain={['auto', 'auto']}
-                />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: 'var(--color-card)',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    borderRadius: '12px',
-                  }}
-                  formatter={(value: number | undefined) => [value != null ? `${value} lbs` : '', '']}
-                  labelFormatter={(_, payload) =>
-                    (payload?.[0]?.payload as { date?: string })?.date ?? ''
-                  }
-                />
-                <Line
-                  type="monotone"
-                  dataKey="weight"
-                  stroke={CHART_COLORS.weightDot}
-                  strokeWidth={0}
-                  dot={{ fill: CHART_COLORS.weightDot, r: 3 }}
-                  connectNulls={false}
-                  name="Daily"
-                  isAnimationActive={false}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="rolling7"
-                  stroke={CHART_COLORS.weightLine}
-                  strokeWidth={2.5}
-                  dot={false}
-                  connectNulls={true}
-                  name="7-day avg"
-                  isAnimationActive={false}
-                />
-                <Legend
-                  verticalAlign="bottom"
-                  height={32}
-                  formatter={(value) => (
-                    <span className="text-[var(--color-text-muted)] text-xs">{value}</span>
-                  )}
-                  iconType="line"
-                  iconSize={10}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 mt-3">
-            {current7DayAvg != null && (
-              <div>
-                <span className="text-2xl font-bold text-[var(--color-text)]">
-                  {current7DayAvg.toFixed(1)}
+      {/* Weight trend (30 days) — always visible; empty state when no data */}
+      <section className="rounded-3xl bg-[var(--color-card)] p-4 mb-4 shadow-[var(--shadow-card)]">
+        <h2 className="text-sm font-medium text-[var(--color-text-muted)] mb-3">
+          Weight trend (30 days)
+        </h2>
+        {last30.some((d) => d.weight != null) ? (
+          <>
+            <div className="h-[200px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  data={last30}
+                  margin={{ top: 8, right: 8, left: -8, bottom: 0 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke={GRID_STROKE} vertical={false} />
+                  <XAxis
+                    dataKey="label"
+                    tick={{ fill: AXIS_STROKE, fontSize: 10 }}
+                    axisLine={{ stroke: GRID_STROKE }}
+                    tickLine={false}
+                    interval="preserveStartEnd"
+                  />
+                  <YAxis
+                    tick={{ fill: AXIS_STROKE, fontSize: 11 }}
+                    axisLine={false}
+                    tickLine={false}
+                    width={36}
+                    tickFormatter={(v) => `${v}`}
+                    domain={['auto', 'auto']}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: 'var(--color-card)',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      borderRadius: '12px',
+                    }}
+                    formatter={(value: number | undefined) => [value != null ? `${value} lbs` : '', '']}
+                    labelFormatter={(_, payload) =>
+                      (payload?.[0]?.payload as { date?: string })?.date ?? ''
+                    }
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="weight"
+                    stroke={CHART_COLORS.weightDot}
+                    strokeWidth={0}
+                    dot={{ fill: CHART_COLORS.weightDot, r: 3 }}
+                    connectNulls={false}
+                    name="Daily"
+                    isAnimationActive={false}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="rolling7"
+                    stroke={CHART_COLORS.weightLine}
+                    strokeWidth={2.5}
+                    dot={false}
+                    connectNulls={true}
+                    name="7-day avg"
+                    isAnimationActive={false}
+                  />
+                  <Legend
+                    verticalAlign="bottom"
+                    height={32}
+                    formatter={(value) => (
+                      <span className="text-[var(--color-text-muted)] text-xs">{value}</span>
+                    )}
+                    iconType="line"
+                    iconSize={10}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 mt-3">
+              {current7DayAvg != null && (
+                <div>
+                  <span className="text-2xl font-bold text-[var(--color-text)]">
+                    {current7DayAvg.toFixed(1)}
+                  </span>
+                  <span className="text-sm text-[var(--color-text-muted)] ml-1">lbs (7-day avg)</span>
+                </div>
+              )}
+              {weekOverWeekChange != null && (
+                <span
+                  className={`text-sm font-medium ${
+                    weekOverWeekChange < 0
+                      ? 'text-[var(--color-accent)]'
+                      : weekOverWeekChange > 0
+                        ? 'text-[var(--color-danger)]'
+                        : 'text-[var(--color-text-muted)]'
+                  }`}
+                >
+                  {weekOverWeekChange > 0 ? '+' : ''}
+                  {weekOverWeekChange} lbs vs last week
                 </span>
-                <span className="text-sm text-[var(--color-text-muted)] ml-1">lbs (7-day avg)</span>
-              </div>
-            )}
-            {weekOverWeekChange != null && (
-              <span
-                className={`text-sm font-medium ${
-                  weekOverWeekChange < 0
-                    ? 'text-[var(--color-accent)]'
-                    : weekOverWeekChange > 0
-                      ? 'text-[var(--color-danger)]'
-                      : 'text-[var(--color-text-muted)]'
-                }`}
-              >
-                {weekOverWeekChange > 0 ? '+' : ''}
-                {weekOverWeekChange} lbs vs last week
-              </span>
-            )}
-          </div>
-        </section>
-      )}
-
-      {/* Rate + status + note */}
-      {(ratePerWeek != null || last30.some((d) => d.weight != null)) && (
-        <section className="rounded-3xl bg-[var(--color-card)] p-4 mb-4 shadow-[var(--shadow-card)]">
-          {ratePerWeek != null && (
-            <p className="text-sm font-medium text-[var(--color-text)] mb-1">
-              Rate: {ratePerWeek > 0 ? '+' : ''}{ratePerWeek} lbs/week (rolling average)
-            </p>
-          )}
-          <p className="text-sm text-[var(--color-text-muted)] mb-3">{statusMessage}</p>
-          <p className="text-xs text-[var(--color-text-muted)] italic">
-            Daily fluctuations of 1–3 lbs are normal; focus on the weekly trend.
-          </p>
-        </section>
-      )}
-
-      {/* Combined weekly view: calories + weight */}
-      {last30.some((d) => d.weight != null) && (
-        <section className="rounded-3xl bg-[var(--color-card)] p-4 mb-4 shadow-[var(--shadow-card)]">
-          <h2 className="text-sm font-medium text-[var(--color-text-muted)] mb-3">
-            This week: intake & weight
-          </h2>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-2xl bg-[var(--color-card-soft)] px-3 py-2.5">
-              <p className="text-xs text-[var(--color-text-muted)] mb-0.5">Avg daily calories</p>
-              <p className="text-lg font-semibold text-[var(--color-text)]">{avgCalories} cal</p>
+              )}
             </div>
-            <div className="rounded-2xl bg-[var(--color-card-soft)] px-3 py-2.5">
-              <p className="text-xs text-[var(--color-text-muted)] mb-0.5">7-day avg weight</p>
-              <p className="text-lg font-semibold text-[var(--color-text)]">
-                {current7DayAvg != null ? `${current7DayAvg.toFixed(1)} lbs` : '—'}
+            {ratePerWeek != null && (
+              <p className="text-sm font-medium text-[var(--color-text)] mt-3 mb-1">
+                Rate: {ratePerWeek > 0 ? '+' : ''}{ratePerWeek} lbs/week (rolling average)
               </p>
-            </div>
-          </div>
-          <p className="text-xs text-[var(--color-text-muted)] mt-2">
-            Compare weekly calories to weight trend to see if intake matches your goals.
+            )}
+            <p className="text-sm text-[var(--color-text-muted)] mb-2">{statusMessage}</p>
+          </>
+        ) : (
+          <p className="text-sm text-[var(--color-text-muted)] mb-2">
+            Log weight on the <strong>Add</strong> tab to see your 30-day trend, 7-day average, and rate here.
           </p>
-        </section>
-      )}
+        )}
+        <p className="text-xs text-[var(--color-text-muted)] italic">
+          Daily fluctuations of 1–3 lbs are normal; focus on the weekly trend.
+        </p>
+      </section>
+
+      {/* Combined weekly view: calories + weight — always visible */}
+      <section className="rounded-3xl bg-[var(--color-card)] p-4 mb-4 shadow-[var(--shadow-card)]">
+        <h2 className="text-sm font-medium text-[var(--color-text-muted)] mb-3">
+          This week: intake & weight
+        </h2>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="rounded-2xl bg-[var(--color-card-soft)] px-3 py-2.5">
+            <p className="text-xs text-[var(--color-text-muted)] mb-0.5">Avg daily calories</p>
+            <p className="text-lg font-semibold text-[var(--color-text)]">{avgCalories} cal</p>
+          </div>
+          <div className="rounded-2xl bg-[var(--color-card-soft)] px-3 py-2.5">
+            <p className="text-xs text-[var(--color-text-muted)] mb-0.5">7-day avg weight</p>
+            <p className="text-lg font-semibold text-[var(--color-text)]">
+              {current7DayAvg != null ? `${current7DayAvg.toFixed(1)} lbs` : '—'}
+            </p>
+          </div>
+        </div>
+        <p className="text-xs text-[var(--color-text-muted)] mt-2">
+          Compare weekly calories to weight trend to see if intake matches your goals.
+        </p>
+      </section>
 
       {/* Weekly bar chart: calories + protein */}
       <section className="rounded-3xl bg-[var(--color-card)] p-4 mb-4 shadow-[var(--shadow-card)]">
