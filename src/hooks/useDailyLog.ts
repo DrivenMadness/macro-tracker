@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import type { DailyLog, MealEntry, DayType } from '../lib/types';
+import type { DailyLog, MealEntry, DayType, MealType } from '../lib/types';
 
 const STORAGE_KEY_PREFIX = 'macrotracker-log-';
 
@@ -79,18 +79,21 @@ export function useDailyLog() {
   );
 
   const toMealEntry = useCallback(
-    (entry: {
-      food_item_id: string | null;
-      custom_name: string | null;
-      calories: number;
-      protein: number;
-      carbs: number;
-      fat: number;
-      fiber?: number;
-      quantity?: number;
-    }): MealEntry => ({
+    (
+      entry: {
+        food_item_id: string | null;
+        custom_name: string | null;
+        calories: number;
+        protein: number;
+        carbs: number;
+        fat: number;
+        fiber?: number;
+        quantity?: number;
+      },
+      mealType: MealType = 'breakfast'
+    ): MealEntry => ({
       id: generateId(),
-      meal_type: 'breakfast',
+      meal_type: mealType,
       food_item_id: entry.food_item_id,
       custom_name: entry.custom_name,
       calories: entry.calories,
@@ -115,12 +118,13 @@ export function useDailyLog() {
         fat: number;
         fiber?: number;
         quantity?: number;
-      }
+      },
+      mealType: MealType = 'breakfast'
     ) => {
       if (!log) return;
       persistLog({
         ...log,
-        entries: [...log.entries, toMealEntry(entry)],
+        entries: [...log.entries, toMealEntry(entry, mealType)],
       });
     },
     [log, persistLog, toMealEntry]
@@ -137,10 +141,11 @@ export function useDailyLog() {
         fat: number;
         fiber?: number;
         quantity?: number;
-      }>
+      }>,
+      mealType: MealType = 'lunch'
     ) => {
       if (!log || entriesToAdd.length === 0) return;
-      const newEntries = entriesToAdd.map((e) => toMealEntry(e));
+      const newEntries = entriesToAdd.map((e) => toMealEntry(e, mealType));
       persistLog({
         ...log,
         entries: [...log.entries, ...newEntries],

@@ -3,40 +3,48 @@ import { X, Camera, Edit3 } from 'lucide-react';
 import { FoodSearch } from './FoodSearch';
 import { PhotoScan } from './PhotoScan';
 import { ManualAdd } from './ManualAdd';
-import type { FoodItem } from '../lib/types';
+import type { FoodItem, MealType } from '../lib/types';
 import type { EstimatedFood } from '../lib/types';
 
 interface AddFoodProps {
-  onAdd: (entry: {
-    food_item_id: string | null;
-    custom_name: string | null;
-    calories: number;
-    protein: number;
-    carbs: number;
-    fat: number;
-    fiber?: number;
-    quantity?: number;
-  }) => void;
+  initialMealType?: MealType | null;
+  onAdd: (
+    entry: {
+      food_item_id: string | null;
+      custom_name: string | null;
+      calories: number;
+      protein: number;
+      carbs: number;
+      fat: number;
+      fiber?: number;
+      quantity?: number;
+    },
+    mealType?: MealType
+  ) => void;
   onPhotoScanConfirm: (items: EstimatedFood[], saveToDb: boolean) => void;
   onManualAdd: (entry: { custom_name: string; calories: number; protein: number; carbs: number; fat: number }, saveToDb: boolean) => void;
   onClose: () => void;
   foods: FoodItem[];
 }
 
-export function AddFood({ onAdd, onPhotoScanConfirm, onManualAdd, onClose, foods }: AddFoodProps) {
+export function AddFood({ initialMealType, onAdd, onPhotoScanConfirm, onManualAdd, onClose, foods }: AddFoodProps) {
   const [view, setView] = useState<'search' | 'photo' | 'manual'>('search');
+  const mealType = initialMealType ?? 'breakfast';
 
   const handleSelect = (food: FoodItem, quantity: number) => {
-    onAdd({
-      food_item_id: food.id,
-      custom_name: null,
-      calories: food.calories,
-      protein: food.protein,
-      carbs: food.carbs,
-      fat: food.fat,
-      fiber: food.fiber,
-      quantity,
-    });
+    onAdd(
+      {
+        food_item_id: food.id,
+        custom_name: null,
+        calories: food.calories,
+        protein: food.protein,
+        carbs: food.carbs,
+        fat: food.fat,
+        fiber: food.fiber,
+        quantity,
+      },
+      mealType
+    );
   };
 
   return (

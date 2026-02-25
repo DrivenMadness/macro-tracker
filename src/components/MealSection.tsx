@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronRight, Plus, Trash2, Pencil, Check, X } from 'lucide-react';
-import type { MealEntry } from '../lib/types';
+import type { MealEntry, MealType } from '../lib/types';
 import type { FoodItem } from '../lib/types';
 
 const PORTION_OPTIONS = [
@@ -22,9 +22,10 @@ function formatPortionSuffix(quantity: number): string {
 interface MealSectionProps {
   title: string;
   emoji?: string;
+  mealType?: MealType;
   entries: MealEntry[];
   foodById: (id: string | null) => FoodItem | undefined;
-  onAdd: () => void;
+  onAdd: (mealType?: MealType) => void;
   onRemove: (entryId: string) => void;
   onUpdateEntry: (
     entryId: string,
@@ -42,6 +43,7 @@ interface MealSectionProps {
 export function MealSection({
   title,
   emoji,
+  mealType,
   entries,
   foodById,
   onAdd,
@@ -61,6 +63,31 @@ export function MealSection({
     }),
     { calories: 0, protein: 0, carbs: 0, fat: 0 }
   );
+
+  const handleAdd = () => onAdd(mealType);
+
+  const isEmpty = entries.length === 0;
+
+  if (isEmpty) {
+    return (
+      <section className="rounded-3xl bg-[var(--color-card)] overflow-hidden shadow-[var(--shadow-card)] tap-bounce">
+        <div className="w-full flex items-center justify-between gap-2 px-5 py-3.5 min-h-[48px]">
+          <span className="flex items-center gap-2">
+            {emoji && <span className="text-xl" role="img" aria-hidden>{emoji}</span>}
+            <span className="font-semibold text-[var(--color-text)]">{title}</span>
+          </span>
+          <button
+            type="button"
+            onClick={handleAdd}
+            className="flex items-center justify-center rounded-full bg-[var(--color-accent)] text-white p-2.5 min-h-[44px] min-w-[44px] shadow-[var(--shadow-soft)] tap-bounce"
+            aria-label={`Add food to ${title}`}
+          >
+            <Plus className="w-5 h-5" />
+          </button>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="rounded-3xl bg-[var(--color-card)] overflow-hidden shadow-[var(--shadow-card)] tap-bounce">
@@ -86,19 +113,6 @@ export function MealSection({
 
       {expanded && (
         <div className="border-t border-[var(--color-card-soft)]">
-          {entries.length === 0 ? (
-            <div className="px-5 py-6 flex flex-col items-center gap-3">
-              <p className="text-sm text-[var(--color-text-muted)]">No items yet</p>
-              <button
-                type="button"
-                onClick={onAdd}
-                className="flex items-center justify-center gap-2 rounded-full bg-[var(--color-accent)] text-white font-semibold px-5 py-3 min-h-[48px] shadow-[var(--shadow-soft)] tap-bounce animate-pop-in"
-              >
-                <Plus className="w-5 h-5" />
-                Add food
-              </button>
-            </div>
-          ) : (
             <ul className="divide-y divide-[var(--color-card-soft)]">
               {entries.map((entry) => {
                 const food = entry.food_item_id ? foodById(entry.food_item_id) : null;
@@ -192,23 +206,20 @@ export function MealSection({
                 );
               })}
             </ul>
-          )}
 
-          {expanded && entries.length > 0 && (
-            <div className="px-5 py-3 flex items-center justify-between border-t border-[var(--color-card-soft)] bg-[var(--color-card-soft)]">
-              <span className="text-sm font-medium text-[var(--color-text-muted)]">
-                Subtotal: {subtotal.calories} cal, {subtotal.protein}g protein
-              </span>
-              <button
-                type="button"
-                onClick={onAdd}
-                className="flex items-center justify-center gap-1 rounded-full border-2 border-[var(--color-accent)] text-[var(--color-accent)] font-semibold px-4 py-2 min-h-[44px] tap-bounce"
-              >
-                <Plus className="w-4 h-4" />
-                Add
-              </button>
-            </div>
-          )}
+          <div className="px-5 py-3 flex items-center justify-between border-t border-[var(--color-card-soft)] bg-[var(--color-card-soft)]">
+            <span className="text-sm font-medium text-[var(--color-text-muted)]">
+              Subtotal: {subtotal.calories} cal, {subtotal.protein}g protein
+            </span>
+            <button
+              type="button"
+              onClick={handleAdd}
+              className="flex items-center justify-center gap-1 rounded-full border-2 border-[var(--color-accent)] text-[var(--color-accent)] font-semibold px-4 py-2 min-h-[44px] tap-bounce"
+            >
+              <Plus className="w-4 h-4" />
+              Add
+            </button>
+          </div>
         </div>
       )}
     </section>

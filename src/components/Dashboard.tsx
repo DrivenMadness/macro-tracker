@@ -1,9 +1,16 @@
 import { useMemo } from 'react';
 import { useDailyLog } from '../hooks/useDailyLog';
 import { useMacroTargets } from '../hooks/useMacroTargets';
-import type { FoodItem } from '../lib/types';
+import type { FoodItem, MealType } from '../lib/types';
 import { ProgressRing } from './ProgressRing';
 import { MealSection } from './MealSection';
+
+const MEAL_SECTIONS: { type: MealType; title: string; emoji: string }[] = [
+  { type: 'breakfast', title: 'Breakfast', emoji: '🌅' },
+  { type: 'lunch', title: 'Lunch', emoji: '☀️' },
+  { type: 'snack', title: 'Snack', emoji: '🍎' },
+  { type: 'dinner', title: 'Dinner', emoji: '🌙' },
+];
 
 const DAY_LABELS: Record<string, string> = {
   Mon: 'Monday',
@@ -17,7 +24,7 @@ const DAY_LABELS: Record<string, string> = {
 
 interface DashboardProps {
   dailyLog: ReturnType<typeof useDailyLog>;
-  onAddFood: () => void;
+  onAddFood: (mealType?: MealType) => void;
   foods: FoodItem[];
 }
 
@@ -123,17 +130,21 @@ export function Dashboard({ dailyLog, onAddFood, foods }: DashboardProps) {
         />
       </div>
 
-      {/* Today's log with emoji */}
+      {/* Meal sections: Breakfast, Lunch, Snack, Dinner */}
       <div className="space-y-4">
-        <MealSection
-          title="Today"
-          emoji="🍽️"
-          entries={entries}
-          foodById={foodById}
-          onAdd={onAddFood}
-          onRemove={removeEntry}
-          onUpdateEntry={updateEntry}
-        />
+        {MEAL_SECTIONS.map(({ type, title, emoji }) => (
+          <MealSection
+            key={type}
+            title={title}
+            emoji={emoji}
+            mealType={type}
+            entries={entries.filter((e) => e.meal_type === type)}
+            foodById={foodById}
+            onAdd={onAddFood}
+            onRemove={removeEntry}
+            onUpdateEntry={updateEntry}
+          />
+        ))}
       </div>
     </div>
   );

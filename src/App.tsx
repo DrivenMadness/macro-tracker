@@ -8,7 +8,7 @@ import { Settings as SettingsScreen } from './components/Settings';
 import { useDailyLog } from './hooks/useDailyLog';
 import { useFoodDatabase } from './hooks/useFoodDatabase';
 import { useWeightLog } from './hooks/useWeightLog';
-import type { EstimatedFood } from './lib/types';
+import type { EstimatedFood, MealType } from './lib/types';
 
 type Tab = 'dashboard' | 'add' | 'history' | 'settings';
 
@@ -159,7 +159,13 @@ function App() {
   const sectionsRef = useRef<(HTMLElement | null)[]>([]);
 
   const [addFoodOpen, setAddFoodOpen] = useState(false);
+  const [addFoodMealType, setAddFoodMealType] = useState<MealType | null>(null);
   const [weightSaved, setWeightSaved] = useState(false);
+
+  const openAddFood = (mealType?: MealType) => {
+    setAddFoodMealType(mealType ?? null);
+    setAddFoodOpen(true);
+  };
 
   const dailyLog = useDailyLog();
   const { addEntry, addEntries } = dailyLog;
@@ -176,15 +182,17 @@ function App() {
       fat: number;
       fiber?: number;
       quantity?: number;
-    }
+    },
+    mealType?: MealType
   ) => {
     flushSync(() => {
-      addEntry(entry);
+      addEntry(entry, mealType ?? addFoodMealType ?? 'breakfast');
     });
     setAddFoodOpen(false);
   };
 
   const handlePhotoScanConfirm = (items: EstimatedFood[], saveToDb: boolean) => {
+    const mealType = addFoodMealType ?? 'lunch';
     addEntries(
       items.map((item) => ({
         food_item_id: null,
@@ -195,7 +203,8 @@ function App() {
         fat: item.fat,
         fiber: item.fiber,
         quantity: 1,
-      }))
+      })),
+      mealType
     );
     items.forEach((item) => {
       if (saveToDb && item.name.trim()) {
@@ -216,15 +225,18 @@ function App() {
     entry: { custom_name: string; calories: number; protein: number; carbs: number; fat: number },
     saveToDb: boolean
   ) => {
-    addEntry({
-      food_item_id: null,
-      custom_name: entry.custom_name,
-      calories: entry.calories,
-      protein: entry.protein,
-      carbs: entry.carbs,
-      fat: entry.fat,
-      quantity: 1,
-    });
+    addEntry(
+      {
+        food_item_id: null,
+        custom_name: entry.custom_name,
+        calories: entry.calories,
+        protein: entry.protein,
+        carbs: entry.carbs,
+        fat: entry.fat,
+        quantity: 1,
+      },
+      addFoodMealType ?? 'breakfast'
+    );
     if (saveToDb && entry.custom_name.trim()) {
       addFood({
         name: entry.custom_name.trim(),
@@ -346,7 +358,7 @@ function App() {
           >
             <Dashboard
               dailyLog={dailyLog}
-              onAddFood={() => setAddFoodOpen(true)}
+              onAddFood={openAddFood}
               foods={foods}
             />
           </section>
@@ -367,7 +379,7 @@ function App() {
               logWeight={logWeight}
               weightSaved={weightSaved}
               setWeightSaved={setWeightSaved}
-              onAddFood={() => setAddFoodOpen(true)}
+              onAddFood={() => openAddFood()}
             />
           </section>
           <section
@@ -403,6 +415,7 @@ function App() {
 
       {addFoodOpen && (
         <AddFood
+          initialMealType={addFoodMealType}
           onAdd={handleFoodAdded}
           onPhotoScanConfirm={handlePhotoScanConfirm}
           onManualAdd={handleManualAdd}
