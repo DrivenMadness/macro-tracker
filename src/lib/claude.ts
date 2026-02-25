@@ -120,7 +120,7 @@ export async function analyzeFoodPhoto(
 const ESTIMATE_PROMPT_PREFIX = `Estimate the macros for this food: `;
 const ESTIMATE_PROMPT_SUFFIX = `
 
-Return a JSON array of items with name, calories, protein, carbs, fat, fiber. If the description includes multiple items, break them out separately. Be conservative with estimates.
+Return a JSON array of items with name, calories, protein, carbs, fat, fiber. If the description includes multiple items, break them out separately. Be as accurate as possible. When sources or viewpoints differ, err on the high side (higher calories and macros) so the user is more likely to eat less than logged rather than more.
 Return ONLY a valid JSON array, no other text. Example format:
 [{"name": "Grilled chicken breast", "calories": 165, "protein": 31, "carbs": 0, "fat": 4, "fiber": 0}]`;
 
