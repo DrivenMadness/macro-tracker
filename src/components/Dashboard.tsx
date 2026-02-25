@@ -64,7 +64,7 @@ export function Dashboard({ dailyLog, onAddFood, foods }: DashboardProps) {
           <p className="text-sm text-[var(--color-text-muted)] mt-0.5">{date}</p>
         </button>
         <div className="flex items-center gap-1.5 shrink-0 pt-0.5" aria-label="NutriBuddy">
-          <img src="/icons/MuscleHeart2_transparent.png" alt="" className="w-8 h-8" aria-hidden />
+          <img src="/icons/MuscleHeart2_transparent.png" alt="" className="w-10 h-10" aria-hidden />
           <span className="text-sm font-bold text-[var(--color-text)]">NutriBuddy</span>
         </div>
       </div>
