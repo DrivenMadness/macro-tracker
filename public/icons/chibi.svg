@@ -1,36 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
-  <!-- Chibi muscle buddy: big head, tiny body, one flexing arm, kawaii mascot -->
+  <!-- Minimalist cute flexed muscle icon -->
   <defs>
-    <linearGradient id="skin" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#FFE4D4"/>
-      <stop offset="100%" stop-color="#F5D0C0"/>
+    <linearGradient id="muscle" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4A9A65"/>
+      <stop offset="50%" stop-color="#5BA872"/>
+      <stop offset="100%" stop-color="#A8D4B4"/>
     </linearGradient>
-    <linearGradient id="shirt" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#A8D4B4"/>
-      <stop offset="100%" stop-color="#5BA872"/>
+    <linearGradient id="hl" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="white" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
     </linearGradient>
   </defs>
-  <!-- Small rounded body (mint tank top) -->
-  <ellipse cx="64" cy="112" rx="26" ry="12" fill="url(#shirt)"/>
-  <!-- Right arm: flexing (rounded bicep + small fist) -->
-  <ellipse cx="94" cy="90" rx="16" ry="20" fill="url(#skin)" stroke="#E8C4B0" stroke-width="1.2"/>
-  <circle cx="102" cy="98" r="7" fill="url(#skin)" stroke="#E8C4B0" stroke-width="1"/>
-  <!-- Left arm: relaxed at side -->
-  <ellipse cx="34" cy="100" rx="10" ry="14" fill="url(#skin)" stroke="#E8C4B0" stroke-width="1"/>
-  <!-- Head (big chibi) -->
-  <circle cx="64" cy="54" r="46" fill="url(#skin)" stroke="#E8C4B0" stroke-width="1.5"/>
-  <!-- Blush -->
-  <ellipse cx="34" cy="58" rx="10" ry="6" fill="#E8A0B0" opacity="0.5"/>
-  <ellipse cx="94" cy="58" rx="10" ry="6" fill="#E8A0B0" opacity="0.5"/>
-  <!-- Eyes (big and friendly) -->
-  <ellipse cx="44" cy="50" rx="12" ry="14" fill="#2D3142"/>
-  <ellipse cx="84" cy="50" rx="12" ry="14" fill="#2D3142"/>
-  <circle cx="47" cy="46" r="4" fill="white"/>
-  <circle cx="87" cy="46" r="4" fill="white"/>
-  <!-- Smile -->
-  <path d="M48 70 Q64 80 80 70" stroke="#2D3142" stroke-width="2" stroke-linecap="round" fill="none"/>
-  <!-- Cute sweat drop (working out) -->
-  <path d="M100 32 Q102 26 105 30 Q103 36 100 34 Q99 33 100 32 Z" fill="#6B9BD1" opacity="0.6"/>
-  <!-- Headband (fitness, pastel green) -->
-  <path d="M22 38 Q64 28 106 38 Q102 46 64 44 Q26 46 22 38 Z" fill="#5BA872"/>
+  <!-- Bicep bulge: rounded top, soft sides (front-view flex) -->
+  <path d="M64 20 
+    C92 20 112 42 108 70 
+    C104 92 88 100 64 104 
+    C40 100 24 92 20 70 
+    C16 42 36 20 64 20 Z" 
+    fill="url(#muscle)"/>
+  <!-- Soft highlight -->
+  <ellipse cx="52" cy="52" rx="18" ry="22" fill="url(#hl)" transform="rotate(-15 52 52)"/>
 </svg>
