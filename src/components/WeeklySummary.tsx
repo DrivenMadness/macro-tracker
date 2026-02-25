@@ -79,7 +79,7 @@ export function WeeklySummary() {
           <p className="text-sm text-[var(--color-text-muted)] mt-0.5">Past 7 days</p>
         </div>
         <div className="flex items-center gap-1.5 shrink-0" aria-label="NutriBuddy">
-          <img src="/icons/MuscleHeart.png" alt="" className="w-8 h-8" aria-hidden />
+          <img src="/icons/MuscleHeart2.png" alt="" className="w-8 h-8" aria-hidden />
           <span className="text-sm font-bold text-[var(--color-text)]">NutriBuddy</span>
         </div>
       </div>

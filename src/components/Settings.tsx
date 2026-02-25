@@ -56,7 +56,7 @@ export function Settings() {
       <div className="flex items-start justify-between gap-3 mb-6">
         <h2 className="text-xl font-bold text-[var(--color-text)]">Settings</h2>
         <div className="flex items-center gap-1.5 shrink-0" aria-label="NutriBuddy">
-          <img src="/icons/MuscleHeart.png" alt="" className="w-8 h-8" aria-hidden />
+          <img src="/icons/MuscleHeart2.png" alt="" className="w-8 h-8" aria-hidden />
           <span className="text-sm font-bold text-[var(--color-text)]">NutriBuddy</span>
         </div>
       </div>
