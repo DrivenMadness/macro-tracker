@@ -24,23 +24,24 @@ function CalorieRing({
   value: number;
   target: number;
 }) {
-  const pct = target > 0 ? Math.min(value / target, 1.5) : 0;
+  const isOver = target > 0 && value > target;
+  const pct = target > 0 ? Math.min(value / target, 1) : 0;
   const dash = pct * RING_CIRCUMFERENCE;
   const displayValue = Math.round(value);
   const displayTarget = Math.round(target);
+  const overAmount = isOver ? Math.round(value - target) : 0;
 
   const gradientId = 'calorie-ring-gradient';
   let strokeColor = 'var(--color-accent)';
-  if (value <= target * 0.9) strokeColor = 'var(--color-accent)';
+  if (isOver) strokeColor = 'var(--color-danger)';
+  else if (value <= target * 0.9) strokeColor = 'var(--color-accent)';
   else if (value <= target) strokeColor = 'var(--color-warning)';
-  else strokeColor = 'var(--color-danger)';
 
-  const textColor =
-    value <= target * 0.9
+  const textColor = isOver
+    ? 'text-[var(--color-danger)]'
+    : value <= target * 0.9
       ? 'text-[var(--color-accent)]'
-      : value <= target
-        ? 'text-[var(--color-warning)]'
-        : 'text-[var(--color-danger)]';
+      : 'text-[var(--color-warning)]';
 
   return (
     <div className="relative flex items-center justify-center">
@@ -84,7 +85,9 @@ function CalorieRing({
           {displayValue.toLocaleString()}
         </span>
         <span className="text-sm font-medium text-[var(--color-text-muted)] mt-0.5">
-          of {displayTarget.toLocaleString()} cal
+          {isOver
+            ? `${overAmount.toLocaleString()} over target`
+            : `of ${displayTarget.toLocaleString()} cal`}
         </span>
       </div>
     </div>
