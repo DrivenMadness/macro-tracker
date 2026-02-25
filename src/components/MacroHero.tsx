@@ -109,6 +109,7 @@ function MacroBar({
 }) {
   const pct = target > 0 ? Math.min(value / target, 1.5) : 0;
   const displayValue = Math.round(value);
+  const displayTarget = Math.round(target);
   const displayPct = target > 0 ? Math.round((value / target) * 100) : 0;
 
   return (
@@ -117,9 +118,14 @@ function MacroBar({
         <span className="text-xs font-medium text-[var(--color-text-muted)] truncate">
           {label}
         </span>
-        <span className="text-xs font-semibold text-[var(--color-text)] tabular-nums shrink-0">
-          {displayValue}g
-          <span className="font-normal text-[var(--color-text-muted)] ml-0.5">
+        <span className="text-xs tabular-nums shrink-0">
+          <span className="font-semibold text-[var(--color-text)]">
+            {displayValue}
+          </span>
+          <span className="font-normal text-[var(--color-text-muted)]">
+            {' '}/ {displayTarget}g
+          </span>
+          <span className="font-normal text-[var(--color-text-muted)] ml-1">
             {displayPct}%
           </span>
         </span>
