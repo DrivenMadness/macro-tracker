@@ -65,54 +65,60 @@ export function MealSection({
   );
 
   const handleAdd = () => onAdd(mealType);
+  const toggleExpanded = () => setExpanded((e) => !e);
 
   const isEmpty = entries.length === 0;
 
-  if (isEmpty) {
-    return (
-      <section className="rounded-3xl bg-[var(--color-card)] overflow-hidden shadow-[var(--shadow-card)] tap-bounce">
-        <div className="w-full flex items-center justify-between gap-2 px-5 py-3.5 min-h-[48px]">
-          <span className="flex items-center gap-2">
-            {emoji && <span className="text-xl" role="img" aria-hidden>{emoji}</span>}
-            <span className="font-semibold text-[var(--color-text)]">{title}</span>
-          </span>
+  return (
+    <section className="rounded-3xl bg-[var(--color-card)] overflow-hidden shadow-[var(--shadow-card)]">
+      {/* Header: toggle button (left) + add or item count (right) */}
+      <div className="w-full flex items-center gap-2 px-5 py-3.5 min-h-[48px]">
+        <button
+          type="button"
+          onClick={toggleExpanded}
+          className="flex items-center gap-2 min-w-0 flex-1 text-left tap-bounce"
+          aria-expanded={expanded}
+          aria-label={expanded ? `Collapse ${title}` : `Expand ${title}`}
+        >
+          {expanded ? (
+            <ChevronDown className="w-5 h-5 text-[var(--color-text-muted)] shrink-0" />
+          ) : (
+            <ChevronRight className="w-5 h-5 text-[var(--color-text-muted)] shrink-0" />
+          )}
+          {emoji && <span className="text-xl shrink-0" role="img" aria-hidden>{emoji}</span>}
+          <span className="font-semibold text-[var(--color-text)] truncate">{title}</span>
+        </button>
+        {isEmpty ? (
           <button
             type="button"
             onClick={handleAdd}
-            className="flex items-center justify-center rounded-full bg-[var(--color-accent)] text-white p-2.5 min-h-[44px] min-w-[44px] shadow-[var(--shadow-soft)] tap-bounce"
+            className="flex items-center justify-center rounded-full bg-[var(--color-accent)] text-white p-2.5 min-h-[44px] min-w-[44px] shrink-0 shadow-[var(--shadow-soft)] tap-bounce"
             aria-label={`Add food to ${title}`}
           >
             <Plus className="w-5 h-5" />
           </button>
-        </div>
-      </section>
-    );
-  }
-
-  return (
-    <section className="rounded-3xl bg-[var(--color-card)] overflow-hidden shadow-[var(--shadow-card)] tap-bounce">
-      <button
-        type="button"
-        onClick={() => setExpanded((e) => !e)}
-        className="w-full flex items-center justify-between gap-2 px-5 py-3.5 min-h-[48px] text-left"
-        aria-expanded={expanded}
-      >
-        <span className="flex items-center gap-2">
-          {expanded ? (
-            <ChevronDown className="w-5 h-5 text-[var(--color-text-muted)]" />
-          ) : (
-            <ChevronRight className="w-5 h-5 text-[var(--color-text-muted)]" />
-          )}
-          {emoji && <span className="text-xl" role="img" aria-hidden>{emoji}</span>}
-          <span className="font-semibold text-[var(--color-text)]">{title}</span>
-        </span>
-        <span className="text-sm font-medium text-[var(--color-text-muted)]">
-          {entries.length} item{entries.length !== 1 ? 's' : ''}
-        </span>
-      </button>
+        ) : (
+          <span className="text-sm font-medium text-[var(--color-text-muted)] shrink-0">
+            {entries.length} item{entries.length !== 1 ? 's' : ''}
+          </span>
+        )}
+      </div>
 
       {expanded && (
         <div className="border-t border-[var(--color-card-soft)]">
+          {isEmpty ? (
+            <div className="px-5 py-6 flex flex-col items-center gap-3">
+              <p className="text-sm text-[var(--color-text-muted)]">No items yet</p>
+              <button
+                type="button"
+                onClick={handleAdd}
+                className="flex items-center justify-center gap-2 rounded-full bg-[var(--color-accent)] text-white font-semibold px-5 py-3 min-h-[48px] shadow-[var(--shadow-soft)] tap-bounce"
+              >
+                <Plus className="w-5 h-5" />
+                Add food
+              </button>
+            </div>
+          ) : (
             <ul className="divide-y divide-[var(--color-card-soft)]">
               {entries.map((entry) => {
                 const food = entry.food_item_id ? foodById(entry.food_item_id) : null;
@@ -220,6 +226,7 @@ export function MealSection({
               Add
             </button>
           </div>
+          )}
         </div>
       )}
     </section>
