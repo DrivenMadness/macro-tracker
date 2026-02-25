@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ChevronDown, ChevronRight, Plus, Trash2, Pencil, Check, X } from 'lucide-react';
 import type { MealEntry, MealType } from '../lib/types';
 import type { FoodItem } from '../lib/types';
@@ -50,9 +50,18 @@ export function MealSection({
   onRemove,
   onUpdateEntry,
 }: MealSectionProps) {
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(() => entries.length > 0);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [portionEntryId, setPortionEntryId] = useState<string | null>(null);
+
+  const isEmpty = entries.length === 0;
+  const prevEmpty = useRef(isEmpty);
+  useEffect(() => {
+    if (prevEmpty.current !== isEmpty) {
+      prevEmpty.current = isEmpty;
+      setExpanded(!isEmpty);
+    }
+  }, [isEmpty]);
 
   const subtotal = entries.reduce(
     (acc, e) => ({
@@ -66,8 +75,6 @@ export function MealSection({
 
   const handleAdd = () => onAdd(mealType);
   const toggleExpanded = () => setExpanded((e) => !e);
-
-  const isEmpty = entries.length === 0;
 
   return (
     <section className="rounded-3xl bg-[var(--color-card)] overflow-hidden shadow-[var(--shadow-card)]">
@@ -107,15 +114,17 @@ export function MealSection({
       {expanded && (
         <div className="border-t border-[var(--color-card-soft)]">
           {isEmpty ? (
-            <div className="px-5 py-6 flex flex-col items-center gap-3">
-              <p className="text-sm text-[var(--color-text-muted)]">No items yet</p>
+            <div className="px-5 py-3 flex items-center justify-between bg-[var(--color-card-soft)]">
+              <span className="text-sm font-medium text-[var(--color-text-muted)]">
+                Subtotal: {subtotal.calories} cal, {subtotal.protein}g protein
+              </span>
               <button
                 type="button"
                 onClick={handleAdd}
-                className="flex items-center justify-center gap-2 rounded-full bg-[var(--color-accent)] text-white font-semibold px-5 py-3 min-h-[48px] shadow-[var(--shadow-soft)] tap-bounce"
+                className="flex items-center justify-center gap-1 rounded-full border-2 border-[var(--color-accent)] text-[var(--color-accent)] font-semibold px-4 py-2 min-h-[44px] tap-bounce"
               >
-                <Plus className="w-5 h-5" />
-                Add food
+                <Plus className="w-4 h-4" />
+                Add
               </button>
             </div>
           ) : (
