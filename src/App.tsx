@@ -89,17 +89,7 @@ function AddTabContent({
 
   return (
     <div className="max-w-lg mx-auto px-4 py-6">
-      <div className="flex items-center justify-between gap-3 mb-6">
-        <h2 className="text-xl font-bold text-[var(--color-text)]">Add</h2>
-        <div className="flex items-center gap-1.5 shrink-0" aria-label="NutriBuddy">
-          <img src="/icons/MuscleHeart2_transparent.png" alt="" className="w-10 h-10" aria-hidden />
-          <span className="text-sm font-bold text-[var(--color-text)]">NutriBuddy</span>
-        </div>
-      </div>
-
-      <p className="text-sm text-[var(--color-text-muted)] mb-4">
-        Log your weight or add food to today&apos;s log.
-      </p>
+      <h2 className="text-xl font-bold text-[var(--color-text)] mb-6">Add</h2>
 
       <div className="space-y-4">
         <article className="rounded-3xl bg-[var(--color-card)] p-5 shadow-[var(--shadow-card)] border border-[var(--color-card-soft)]">
@@ -252,7 +242,6 @@ function App() {
   const handleTouchStart = (e: React.TouchEvent) => {
     const target = e.target as HTMLElement | null;
     if (target && target.closest('button, a, [role="button"], input, textarea, select')) {
-      // Don't start swipe gestures when interacting with controls
       gestureActive.current = false;
       swipeLock.current = false;
       setIsDragging(false);
@@ -271,7 +260,6 @@ function App() {
     const deltaX = x - touchStart.current.x;
     const deltaY = y - touchStart.current.y;
 
-    // Only lock to horizontal swipe when movement is clearly horizontal (avoids stealing vertical scroll)
     if (!swipeLock.current && (Math.abs(deltaX) > 12 || Math.abs(deltaY) > 12)) {
       const clearlyHorizontal = Math.abs(deltaX) > 20 && Math.abs(deltaX) > 1.8 * Math.abs(deltaY);
       swipeLock.current = clearlyHorizontal;
@@ -309,7 +297,6 @@ function App() {
     return () => el.removeEventListener('touchmove', onTouchMove);
   }, []);
 
-  // Scroll the newly active tab to top (section + window for mobile)
   useEffect(() => {
     const scrollToTop = () => {
       const el = sectionsRef.current[tabIndex];
@@ -319,7 +306,6 @@ function App() {
       }
       window.scrollTo(0, 0);
     };
-    // Run immediately and again after slide transition (250ms) so it sticks on mobile
     scrollToTop();
     const t = setTimeout(scrollToTop, 300);
     return () => clearTimeout(t);
@@ -328,6 +314,14 @@ function App() {
   const slideStyle = {
     transform: `translateX(calc(-${tabIndex * (100 / TABS.length)}% + ${dragPx}px))`,
     transition: isDragging ? 'none' : 'transform 0.25s ease-out',
+  };
+
+  const sectionStyle = {
+    width: `${100 / TABS.length}%`,
+    height: 'calc(100vh - 64px)',
+    maxHeight: 'calc(100vh - 64px)',
+    WebkitOverflowScrolling: 'touch' as const,
+    touchAction: 'pan-y' as const,
   };
 
   return (
@@ -347,13 +341,7 @@ function App() {
           <section
             ref={(el) => { sectionsRef.current[0] = el; }}
             className="shrink-0 overflow-y-auto overflow-x-hidden overscroll-y-auto"
-            style={{
-              width: `${100 / TABS.length}%`,
-              height: 'calc(100vh - 96px)',
-              maxHeight: 'calc(100vh - 96px)',
-              WebkitOverflowScrolling: 'touch',
-              touchAction: 'pan-y',
-            }}
+            style={sectionStyle}
             aria-label="Dashboard"
           >
             <Dashboard
@@ -365,13 +353,7 @@ function App() {
           <section
             ref={(el) => { sectionsRef.current[1] = el; }}
             className="shrink-0 overflow-y-auto overflow-x-hidden overscroll-y-auto"
-            style={{
-              width: `${100 / TABS.length}%`,
-              height: 'calc(100vh - 96px)',
-              maxHeight: 'calc(100vh - 96px)',
-              WebkitOverflowScrolling: 'touch',
-              touchAction: 'pan-y',
-            }}
+            style={sectionStyle}
             aria-label="Add"
           >
             <AddTabContent
@@ -385,13 +367,7 @@ function App() {
           <section
             ref={(el) => { sectionsRef.current[2] = el; }}
             className="shrink-0 overflow-y-auto overflow-x-hidden overscroll-y-auto"
-            style={{
-              width: `${100 / TABS.length}%`,
-              height: 'calc(100vh - 96px)',
-              maxHeight: 'calc(100vh - 96px)',
-              WebkitOverflowScrolling: 'touch',
-              touchAction: 'pan-y',
-            }}
+            style={sectionStyle}
             aria-label="History"
           >
             <WeeklySummary />
@@ -399,13 +375,7 @@ function App() {
           <section
             ref={(el) => { sectionsRef.current[3] = el; }}
             className="shrink-0 overflow-y-auto overflow-x-hidden overscroll-y-auto"
-            style={{
-              width: `${100 / TABS.length}%`,
-              height: 'calc(100vh - 96px)',
-              maxHeight: 'calc(100vh - 96px)',
-              WebkitOverflowScrolling: 'touch',
-              touchAction: 'pan-y',
-            }}
+            style={sectionStyle}
             aria-label="Settings"
           >
             <SettingsScreen />
@@ -425,27 +395,27 @@ function App() {
       )}
 
       <nav
-        className="fixed bottom-0 left-0 right-0 bg-[var(--color-card)] shadow-[0_-4px 20px rgba(45,49,66,0.08)] z-40 min-h-[96px] flex flex-col justify-end"
+        className="fixed bottom-0 left-0 right-0 bg-[var(--color-card)] shadow-[0_-2px_12px_rgba(45,49,66,0.06)] z-40 flex flex-col justify-end"
         style={{ paddingBottom: 'env(safe-area-inset-bottom, 0)' }}
         role="navigation"
       >
-        <div className="max-w-lg mx-auto flex items-center justify-around w-full min-h-[96px] py-2">
+        <div className="max-w-lg mx-auto flex items-center justify-around w-full h-16 py-1">
           {(['dashboard', 'add', 'history', 'settings'] as const).map((t, i) => (
             <button
               key={t}
               type="button"
               onClick={() => setTabIndex(i)}
-              className={`flex flex-col items-center justify-center gap-1 flex-1 min-h-[56px] tap-bounce ${
+              className={`flex flex-col items-center justify-center gap-0.5 flex-1 h-14 tap-bounce ${
                 tabIndex === i ? 'text-[var(--color-accent)]' : 'text-[var(--color-text-muted)]'
               }`}
               aria-current={tabIndex === i ? 'page' : undefined}
               aria-label={t === 'dashboard' ? 'Dashboard' : t === 'add' ? 'Add' : t === 'history' ? 'History' : 'Settings'}
             >
-              {t === 'dashboard' && <LayoutDashboard className="w-8 h-8" />}
-              {t === 'add' && <PlusCircle className="w-8 h-8" />}
-              {t === 'history' && <BarChart3 className="w-8 h-8" />}
-              {t === 'settings' && <Settings className="w-8 h-8" />}
-              <span className="text-sm font-semibold">
+              {t === 'dashboard' && <LayoutDashboard className="w-6 h-6" />}
+              {t === 'add' && <PlusCircle className="w-6 h-6" />}
+              {t === 'history' && <BarChart3 className="w-6 h-6" />}
+              {t === 'settings' && <Settings className="w-6 h-6" />}
+              <span className="text-[10px] font-semibold">
                 {t === 'dashboard' ? 'Dashboard' : t === 'add' ? 'Add' : t === 'history' ? 'History' : 'Settings'}
               </span>
             </button>

@@ -53,13 +53,7 @@ export function Settings() {
 
   return (
     <div className="max-w-lg mx-auto px-4 py-8 pb-24">
-      <div className="flex items-start justify-between gap-3 mb-6">
-        <h2 className="text-xl font-bold text-[var(--color-text)]">Settings</h2>
-        <div className="flex items-center gap-1.5 shrink-0" aria-label="NutriBuddy">
-          <img src="/icons/MuscleHeart2_transparent.png" alt="" className="w-10 h-10" aria-hidden />
-          <span className="text-sm font-bold text-[var(--color-text)]">NutriBuddy</span>
-        </div>
-      </div>
+      <h2 className="text-xl font-bold text-[var(--color-text)] mb-6">Settings</h2>
 
       {/* Goal weight */}
       <section className="mb-8">

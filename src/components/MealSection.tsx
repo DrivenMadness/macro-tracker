@@ -21,7 +21,6 @@ function formatPortionSuffix(quantity: number): string {
 
 interface MealSectionProps {
   title: string;
-  emoji?: string;
   mealType?: MealType;
   entries: MealEntry[];
   foodById: (id: string | null) => FoodItem | undefined;
@@ -42,7 +41,6 @@ interface MealSectionProps {
 
 export function MealSection({
   title,
-  emoji,
   mealType,
   entries,
   foodById,
@@ -78,7 +76,7 @@ export function MealSection({
 
   return (
     <section className="rounded-3xl bg-[var(--color-card)] overflow-hidden shadow-[var(--shadow-card)]">
-      {/* Header: toggle button (left) + add or item count (right) */}
+      {/* Header */}
       <div className="w-full flex items-center gap-2 px-5 py-3.5 min-h-[48px]">
         <button
           type="button"
@@ -92,7 +90,6 @@ export function MealSection({
           ) : (
             <ChevronRight className="w-5 h-5 text-[var(--color-text-muted)] shrink-0" />
           )}
-          {emoji && <span className="text-xl shrink-0" role="img" aria-hidden>{emoji}</span>}
           <span className="font-semibold text-[var(--color-text)] truncate">{title}</span>
         </button>
         {isEmpty ? (
@@ -114,10 +111,7 @@ export function MealSection({
       {expanded && (
         <div className="border-t border-[var(--color-card-soft)]">
           {isEmpty ? (
-            <div className="px-5 py-3 flex items-center justify-between bg-[var(--color-card-soft)]">
-              <span className="text-sm font-medium text-[var(--color-text-muted)]">
-                Subtotal: {subtotal.calories} cal, {subtotal.protein}g protein
-              </span>
+            <div className="px-5 py-4 flex items-center justify-center">
               <button
                 type="button"
                 onClick={handleAdd}
@@ -157,7 +151,7 @@ export function MealSection({
                       />
                     ) : (
                       <>
-                        <div className="group flex items-center gap-2 px-5 py-3">
+                        <div className="flex items-center gap-2 px-5 py-3">
                           <button
                             type="button"
                             onClick={() => setPortionEntryId((current) => (current === entry.id ? null : entry.id))}
@@ -176,19 +170,18 @@ export function MealSection({
                                 {cal} cal · {pro}g protein
                               </p>
                             </div>
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                e.preventDefault();
-                                setPortionEntryId(null);
-                                setEditingId(entry.id);
-                              }}
-                              className="p-2 -m-2 rounded-xl shrink-0 opacity-0 group-hover:opacity-100 hover:bg-[var(--color-card-soft)] transition-opacity tap-bounce"
-                              aria-label="Edit entry"
-                            >
-                              <Pencil className="w-4 h-4 text-[var(--color-text-muted)]" />
-                            </button>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setPortionEntryId(null);
+                              setEditingId(entry.id);
+                            }}
+                            className="p-2 rounded-xl shrink-0 text-[var(--color-text-muted)] hover:bg-[var(--color-card-soft)] transition-colors tap-bounce"
+                            aria-label="Edit entry"
+                          >
+                            <Pencil className="w-4 h-4" />
                           </button>
                           <button
                             type="button"
@@ -224,7 +217,7 @@ export function MealSection({
             </ul>
             <div className="px-5 py-3 flex items-center justify-between border-t border-[var(--color-card-soft)] bg-[var(--color-card-soft)]">
               <span className="text-sm font-medium text-[var(--color-text-muted)]">
-                Subtotal: {subtotal.calories} cal, {subtotal.protein}g protein
+                {Math.round(subtotal.calories)} cal · {Math.round(subtotal.protein)}g protein
               </span>
               <button
                 type="button"

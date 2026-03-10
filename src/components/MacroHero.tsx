@@ -32,16 +32,8 @@ function CalorieRing({
   const overAmount = isOver ? Math.round(value - target) : 0;
 
   const gradientId = 'calorie-ring-gradient';
-  let strokeColor = 'var(--color-accent)';
-  if (isOver) strokeColor = 'var(--color-danger)';
-  else if (value <= target * 0.9) strokeColor = 'var(--color-accent)';
-  else if (value <= target) strokeColor = 'var(--color-warning)';
-
-  const textColor = isOver
-    ? 'text-[var(--color-danger)]'
-    : value <= target * 0.9
-      ? 'text-[var(--color-accent)]'
-      : 'text-[var(--color-warning)]';
+  const strokeColor = isOver ? 'var(--color-danger)' : 'var(--color-accent)';
+  const textColor = isOver ? 'text-[var(--color-danger)]' : 'text-[var(--color-accent)]';
 
   return (
     <div className="relative flex items-center justify-center">

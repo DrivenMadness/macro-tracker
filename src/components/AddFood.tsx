@@ -53,10 +53,6 @@ export function AddFood({ initialMealType, onAdd, onPhotoScanConfirm, onManualAd
       <header className="flex items-center justify-between px-4 py-3 border-b border-[var(--color-card-soft)] shrink-0 bg-[var(--color-card)] shadow-[var(--shadow-card)]">
         <h2 className="text-lg font-bold text-[var(--color-text)]">Add food</h2>
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1.5" aria-label="NutriBuddy">
-            <img src="/icons/MuscleHeart2_transparent.png" alt="" className="w-10 h-10 shrink-0" aria-hidden />
-            <span className="text-sm font-bold text-[var(--color-text)]">NutriBuddy</span>
-          </div>
           <button
             type="button"
             onClick={onClose}

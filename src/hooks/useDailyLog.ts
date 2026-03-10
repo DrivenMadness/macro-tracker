@@ -205,6 +205,26 @@ export function useDailyLog() {
     setDate(todayKey());
   }, []);
 
+  const goToPrevDay = useCallback(() => {
+    setDate((prev) => {
+      const d = new Date(prev + 'T12:00:00');
+      d.setDate(d.getDate() - 1);
+      return d.toISOString().slice(0, 10);
+    });
+  }, []);
+
+  const goToNextDay = useCallback(() => {
+    setDate((prev) => {
+      const d = new Date(prev + 'T12:00:00');
+      d.setDate(d.getDate() + 1);
+      const next = d.toISOString().slice(0, 10);
+      // Don't go past today
+      return next > todayKey() ? prev : next;
+    });
+  }, []);
+
+  const isToday = date === todayKey();
+
   const entries = log ? log.entries : [];
 
   const totals = log
@@ -230,6 +250,9 @@ export function useDailyLog() {
     updateEntry,
     removeEntry,
     goToToday,
+    goToPrevDay,
+    goToNextDay,
+    isToday,
     entries,
     totals,
     refreshLog,

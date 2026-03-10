@@ -73,17 +73,10 @@ export function WeeklySummary() {
 
   return (
     <div className="max-w-lg mx-auto px-4 pb-24">
-      <div className="flex items-start justify-between gap-3 pt-4 pb-2">
-        <div>
-          <h2 className="text-xl font-bold text-[var(--color-text)]">Summary</h2>
-          <p className="text-sm text-[var(--color-text-muted)] mt-0.5">Past 7 days</p>
-        </div>
-        <div className="flex items-center gap-1.5 shrink-0" aria-label="NutriBuddy">
-          <img src="/icons/MuscleHeart2_transparent.png" alt="" className="w-10 h-10" aria-hidden />
-          <span className="text-sm font-bold text-[var(--color-text)]">NutriBuddy</span>
-        </div>
+      <div className="pt-4 pb-4">
+        <h2 className="text-xl font-bold text-[var(--color-text)]">Summary</h2>
+        <p className="text-sm text-[var(--color-text-muted)] mt-0.5">Past 7 days</p>
       </div>
-      <div className="mb-6" />
 
       {/* Weekly bar chart: calories + protein */}
       <section className="rounded-3xl bg-[var(--color-card)] p-4 mb-4 shadow-[var(--shadow-card)]">
@@ -278,29 +271,7 @@ export function WeeklySummary() {
         </div>
       </section>
 
-      {/* This week: intake & weight — below calories/macro */}
-      <section className="rounded-3xl bg-[var(--color-card)] p-4 mb-4 shadow-[var(--shadow-card)]">
-        <h2 className="text-sm font-medium text-[var(--color-text-muted)] mb-3">
-          This week: intake & weight
-        </h2>
-        <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-2xl bg-[var(--color-card-soft)] px-3 py-2.5">
-            <p className="text-xs text-[var(--color-text-muted)] mb-0.5">Avg daily calories</p>
-            <p className="text-lg font-semibold text-[var(--color-text)]">{avgCalories} cal</p>
-          </div>
-          <div className="rounded-2xl bg-[var(--color-card-soft)] px-3 py-2.5">
-            <p className="text-xs text-[var(--color-text-muted)] mb-0.5">7-day avg weight</p>
-            <p className="text-lg font-semibold text-[var(--color-text)]">
-              {current7DayAvg != null ? `${current7DayAvg.toFixed(1)} lbs` : '—'}
-            </p>
-          </div>
-        </div>
-        <p className="text-xs text-[var(--color-text-muted)] mt-2">
-          Compare weekly calories to weight trend to see if intake matches your goals.
-        </p>
-      </section>
-
-      {/* Weight trend (30 days) — below calories and macro */}
+      {/* Weight trend (30 days) */}
       <section className="rounded-3xl bg-[var(--color-card)] p-4 mb-4 shadow-[var(--shadow-card)]">
         <h2 className="text-sm font-medium text-[var(--color-text-muted)] mb-3">
           Weight trend (30 days)
